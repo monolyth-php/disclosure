@@ -35,6 +35,15 @@ trait Injector
 
     private function injectAs()
     {
+        $names = func_get_args();
+        return function() use($names) {
+            $stuff = func_get_args();
+            $return = [];
+            foreach ($names as $key => $value) {
+                $return[$value] = $stuff[$key];
+            }
+            return $return;
+        };
     }
 }
 
