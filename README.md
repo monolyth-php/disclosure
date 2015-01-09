@@ -162,7 +162,7 @@ injection:
         public function __construct()
         {
             // Set $this->bar to the Foo dependency:
-            $this->inject('Foo', function($bar) { return func_get_args(); });
+            $this->inject('Foo', function($bar) { return get_defined_vars(); });
         }
     }
 
@@ -201,7 +201,7 @@ A final use of the callback-style registration is to allow for type hinting:
         {
             // Set $this->bar to the Foo dependency:
             $this->inject('Foo', function(Foo $bar) {
-                return func_get_args();
+                return get_defined_vars();
             });
         }
     }
@@ -232,7 +232,7 @@ in the normal way:
         {
             // Private depedency $this->bar:
             $this->inject('Foo', function(Foo $bar) {
-                return func_get_args();
+                return get_defined_vars();
             });
         }
     }
