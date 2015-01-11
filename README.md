@@ -5,7 +5,7 @@ Installation
 ------------
 
 1. Clone the repository
-2. Include the autoloader: `<?php include '/path/to/disclosure/autoload.php' ?>`
+2. Include the bootstrapper: `<?php include '/path/to/disclosure/autoload.php' ?>`
 3. Done! Start using it :)
 
 Usage
