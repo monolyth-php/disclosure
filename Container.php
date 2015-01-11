@@ -3,7 +3,7 @@
 namespace disclosure;
 use BadMethodCallException;
 
-class Container
+abstract class Container
 {
     private static $registered = [];
 
