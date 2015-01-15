@@ -1,6 +1,6 @@
 <?php
 
-namespace disclosure;
+namespace Disclosure;
 
 abstract class Exception extends \Exception
 {
