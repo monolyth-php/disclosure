@@ -3,11 +3,11 @@
 namespace Disclosure;
 use BadMethodCallException;
 
-abstract class Container
+class Container
 {
-    private static $registered = [];
+    private $registered = [];
 
-    public static function register($arg1, $arg2 = null)
+    public function register($arg1, $arg2 = null)
     {
         if (isset($arg2)) {
             $name = $arg1;
@@ -23,7 +23,7 @@ abstract class Container
                 $name = array_pop($parts);
             } elseif (is_object($arg1)) {
                 if (is_callable($arg1)) {
-                    $name = count(self::$registered) + 1;
+                    $name = count($this->registered) + 1;
                 } else {
                     $cname = get_class($arg1);
                     $parts = explode('\\', $cname);
@@ -33,22 +33,22 @@ abstract class Container
                 throw new BadMethodCallException;
             }
         }
-        self::$registered[$name] = $class;
+        $this->registered[$name] = $class;
         return $name;
     }
 
-    public static function unregister($name)
+    public function unregister($name)
     {
-        unset(self::$registered[$name]);
+        unset($this->registered[$name]);
     }
 
-    public static function get($name)
+    public function get($name)
     {
         return function() use($name) {
-            if (!isset(self::$registered[$name])) {
+            if (!isset($this->registered[$name])) {
                 throw new UnregisteredException;
             }
-            $found = self::$registered[$name];
+            $found = $this->registered[$name];
             if (is_callable($found)) {
                 return $found();
             } elseif (is_object($found)) {
