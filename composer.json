@@ -1,0 +1,21 @@
+{
+    "name": "monomelodies/disclosue",
+    "description": "PHP5 dependency injection framework",
+    "license": "MIT",
+    "keywords": ["php","dependency","injection"],
+    "authors": [
+        {
+            "name": "Marijn Ophorst",
+            "email": "marijn@monomelodies.nl"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Disclosure\\": "src"
+        }
+    }
+}    
