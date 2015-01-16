@@ -7,6 +7,19 @@ class Container
 {
     private $registered = [];
 
+    private function __construct()
+    {
+    }
+
+    public function instance()
+    {
+        static $container;
+        if (!isset($container)) {
+            $container = new Container;
+        }
+        return $container;
+    }
+
     public function register($arg1, $arg2 = null)
     {
         if (isset($arg2)) {
