@@ -25,10 +25,12 @@ Usage
 
 Disclosure is a dependency injection and service locator framework, so
 your existing code has to be adapted to work with it. This means there
-are two steps to be taken:
+are four steps to be taken:
 
-1. Register stuff that can be depended on;
-2. Make your classes depend on stuff.
+1. Somewhere central in your application, instantiate a Container;
+2. Register stuff that can be depended on;
+3. Make sure your classes know about the Container object;
+4. Make your classes depend on stuff.
 
 ###Registering depedables###
 
@@ -41,16 +43,17 @@ overrides first) or do something manual if you're that way inclined.
 
     use Disclosure\Container;
 
+    $container = new Container;
     // Register class Foo:
-    Container::register('Foo');
+    $container->register('Foo');
     // Register class Foo as bar:
-    Container::register('bar', 'Foo');
+    $container->register('bar', 'Foo');
     // Register Foo as a service:
-    Container::register('Foo', new Foo);
+    $container->register('Foo', new Foo);
     // Or, assuming the instance method returns a singleton:
-    Container::register(['Foo', 'instance']);
+    $container->register(['Foo', 'instance']);
     // Or, assuming it doesn't:
-    Container::register('Foo', function() {
+    $container->register('Foo', function() {
         static $foo;
         if (!isset($foo)) {
             $foo = new Foo;
@@ -89,7 +92,8 @@ itself:
         }
     }
 
-    Container::register('Foo', function() {
+    $container = new Container;
+    $container->register('Foo', function() {
         return new Foo;
     });
 
@@ -100,10 +104,9 @@ You can also use `Container::get` to retrieve another registered dependency:
 
     <?php
 
-    use Disclosure\Container;
-
-    Container::register('Foo');
-    Container::register('bar', Container::get('Foo'));
+    // ...assuming $container is an instance of Disclosure\Container...
+    $container->register('Foo');
+    $container->register('bar', $container->get('Foo'));
 
 `Container::get` returns a promise of sorts, so the order here is not important.
 Just make sure Foo exists as a dependency by the time you inject it somewhere.
@@ -143,19 +146,29 @@ to an injectable dependency. A `Disclosure\UnregisteredException` is thrown if
 a dependency was not defined previously. Any other dependency _will_ be
 resolved, so you may catch the exception and handle accordingly.
 
+You will also have to make sure your class "knows" about the container. Passing
+it in the constructor is the reommended way:
+
     <?php
 
     use Disclosure\Injector;
+    use Disclosure\Container;
 
     class Bar
     {
         use Injector;
 
-        public function __construct()
+        private $disclosureContainer;
+
+        public function __construct(Container $container)
         {
+            $this->disclosureContainer = $container;
             // Set $this->Foo to the Foo dependency:
             $this->inject('Foo');
         }
+    }
+
+The property _must_ be named `disclosureContainer`.
 
 #### Injection with callback ####
 
@@ -166,13 +179,17 @@ injection:
     <?php
 
     use Disclosure\Injector;
+    use Disclosure\Container;
 
     class Bar
     {
         use Injector;
 
-        public function __construct()
+        private $disclosureContainer;
+
+        public function __construct(Container $container)
         {
+            $this->disclosureContainer = $container;
             // Set $this->bar to the Foo dependency:
             $this->inject('Foo', function($bar) { return get_defined_vars(); });
         }
@@ -185,13 +202,17 @@ A final use of the callback-style registration is to allow for type hinting:
     <?php
 
     use Disclosure\Injector;
+    use Disclosure\Container;
 
     class Bar
     {
         use Injector;
 
-        public function __construct()
+        private $disclosureContainer;
+
+        public function __construct(Container $container)
         {
+            $this->disclosureContainer = $container;
             // Set $this->bar to the Foo dependency:
             $this->inject('Foo', function(Foo $bar) {
                 return get_defined_vars();
@@ -214,15 +235,18 @@ in the normal way:
     <?php
 
     use Disclosure\Injector;
+    use Disclosure\Container;
 
     class Bar
     {
         use Injector;
 
         private $bar;
+        private $disclosureContainer;
 
-        public function __construct()
+        public function __construct(Container $container)
         {
+            $this->disclosureContainer = $container;
             // Private depedency $this->bar:
             $this->inject('Foo', function(Foo $bar) {
                 return get_defined_vars();
