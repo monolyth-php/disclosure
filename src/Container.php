@@ -15,7 +15,7 @@ class Container
     {
         static $container;
         if (!isset($container)) {
-            $container = new __CLASS__;
+            $container = new Container;
         }
         return $container;
     }
