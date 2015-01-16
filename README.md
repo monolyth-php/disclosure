@@ -43,7 +43,8 @@ overrides first) or do something manual if you're that way inclined.
 
     use Disclosure\Container;
 
-    $container = new Container;
+    // Container is a singleton:
+    $container = Container::instance();
     // Register class Foo:
     $container->register('Foo');
     // Register class Foo as bar:
@@ -92,7 +93,7 @@ itself:
         }
     }
 
-    $container = new Container;
+    $container = Container::instance();
     $container->register('Foo', function() {
         return new Foo;
     });
