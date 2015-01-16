@@ -14,7 +14,9 @@ trait Injector
         $missing = false;
         foreach ($args as $arg) {
             try {
-                $deps[$arg] = call_user_func(Container::get($arg));
+                $deps[$arg] = call_user_func(
+                    $this->disclosureContainer->get($arg)
+                );
             } catch (UnregisteredException $e) {
                 $missing = true;
                 $deps[$arg] = null;
