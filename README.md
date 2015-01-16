@@ -5,7 +5,7 @@ Installation
 ------------
 
 1. Clone the repository
-2. Include the bootstrapper: `<?php include '/path/to/disclosure/autoload.php' ?>`
+2. Include the autoloader: `<?php include '/path/to/disclosure/src/autoload.php' ?>`
 3. Done! Start using it :)
 
 Usage
@@ -27,7 +27,7 @@ overrides first) or do something manual if you're that way inclined.
 
     <?php
 
-    use disclosure\Container;
+    use Disclosure\Container;
 
     // Register class Foo:
     Container::register('Foo');
@@ -54,7 +54,7 @@ can be either:
 * An object, which will be injected verbatim;
 * A callable, the return value of which will be injected.
 
-If the dependency name is unspecified, disclosure tries to guesstimate it:
+If the dependency name is unspecified, Disclosure tries to guesstimate it:
 
 * For a classname, use the name (without namespaces);
 * For a callable, when an array with class/method elements, use the classname
@@ -68,7 +68,7 @@ itself:
 
     <?php
 
-    use disclosure\Container;
+    use Disclosure\Container;
 
     class Foo
     {
@@ -81,14 +81,14 @@ itself:
         return new Foo;
     });
 
-Failure to do so will erroneously cause disclosure to call `__invoke` and
+Failure to do so will erroneously cause Disclosure to call `__invoke` and
 register its return value, which is probably _not_ what you want!
 
 You can also use `Container::get` to retrieve another registered dependency:
 
     <?php
 
-    use disclosure\Container;
+    use Disclosure\Container;
 
     Container::register('Foo');
     Container::register('bar', Container::get('Foo'));
@@ -114,7 +114,7 @@ In your consuming class, `use` the Injector trait:
 
     <?php
 
-    use disclosure\Injector;
+    use Disclosure\Injector;
 
     class Bar
     {
@@ -127,13 +127,13 @@ need to load dependencies for a single method only in that method, which is
 perfectly fine).
 
 `inject` takes a variable number of arguments, each of which should correspond
-to an injectable dependency. A `disclosure\UnregisteredException` is thrown if
+to an injectable dependency. A `Disclosure\UnregisteredException` is thrown if
 a dependency was not defined previously. Any other dependency _will_ be
 resolved, so you may catch the exception and handle accordingly.
 
     <?php
 
-    use disclosure\Injector;
+    use Disclosure\Injector;
 
     class Bar
     {
@@ -153,7 +153,7 @@ injection:
 
     <?php
 
-    use disclosure\Injector;
+    use Disclosure\Injector;
 
     class Bar
     {
@@ -166,32 +166,13 @@ injection:
         }
     }
 
-For convenience, the Injector trait also exposes the method `injectAs` which,
-like `inject`, takes a variable number of arguments, only this time specifying
-all aliases:
-
-    <?php
-
-    use disclosure\Injector;
-
-    class Bar
-    {
-        use Injector;
-
-        public function __construct()
-        {
-            // Set $this->bar to the Foo dependency:
-            $this->inject('Foo', $this->injectAs('bar'));
-        }
-    }
-
 #### Injection with type hinting ####
 
 A final use of the callback-style registration is to allow for type hinting:
 
     <?php
 
-    use disclosure\Injector;
+    use Disclosure\Injector;
 
     class Bar
     {
@@ -220,7 +201,7 @@ in the normal way:
 
     <?php
 
-    use disclosure\Injector;
+    use Disclosure\Injector;
 
     class Bar
     {
@@ -246,5 +227,5 @@ following:
 * class Foo depends on class Bar;
 * class Bar depends on class Foo.
 
-When disclosure detects a circular dependency, it will throw a
-`disclosure\CircularDependencyException`.
+When Disclosure detects a circular dependency, it will throw a
+`Disclosure\CircularDependencyException`.

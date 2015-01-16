@@ -1,6 +1,6 @@
 <?php
 
-namespace disclosure;
+namespace Disclosure;
 use BadMethodCallException;
 
 abstract class Container

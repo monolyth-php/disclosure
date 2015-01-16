@@ -1,6 +1,6 @@
 <?php
 
-namespace disclosure;
+namespace Disclosure;
 
 class CircularDependencyException extends Exception
 {
