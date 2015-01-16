@@ -5,8 +5,20 @@ Installation
 ------------
 
 1. Clone the repository
-2. Include the autoloader: `<?php include '/path/to/disclosure/src/autoload.php' ?>`
+2. Include the necessary files, or register `/path/to/disclosure/src` in a
+   PSR-4 autoloader.
 3. Done! Start using it :)
+
+###Installation using Composer###
+
+1. Add a requirement to "monomelodies/disclosure" to your `composer.json`;
+2. Add Reroute to the autoload:psr-4 hash:
+    "autoload": {
+        "psr-4": {
+            "Disclosure": "src"
+        }
+    }
+3. Run `composer install`
 
 Usage
 -----
