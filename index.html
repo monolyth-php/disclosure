@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Disclosure by monomelodies</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Disclosure</h1>
+        <h2>PHP5 depdendency injection framework</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/monomelodies/disclosure/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/monomelodies/disclosure/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/monomelodies/disclosure" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="disclosure" class="anchor" href="#disclosure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Disclosure</h1>
+
+<p>PHP5 dependency injection and service locator framework.
+Most existing DI or Inversion of Control (IoC) solutions depend on extensive
+configuration files to define dependencies. This sucks; Disclosure is better
+and simpler (we think).</p>
+
+<p>Full documentation: <a href="http://disclosure.readthedocs.org/en/latest/">http://disclosure.readthedocs.org/en/latest/</a></p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<h3>
+<a id="composer-recommended" class="anchor" href="#composer-recommended" aria-hidden="true"><span class="octicon octicon-link"></span></a>Composer (recommended)</h3>
+
+<p>Add "monomelodies/disclosure" to your <code>composer.json</code> requirements:</p>
+
+<pre><code>{
+    "require": {
+        "monomelodies/disclosure": "&gt;=0.1"
+    }
+}
+</code></pre>
+
+<h3>
+<a id="manual-installation" class="anchor" href="#manual-installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Manual installation</h3>
+
+<ol>
+<li>Get the code;
+1.1. Clone the repository, e.g. from GitHub;
+1.2. Download the ZIP (e.g. from Github) and extract.</li>
+<li>Make your project recognize Reroute:
+2.1. Register <code>/path/to/reroute/src</code> for the namespace <code>Reroute\\</code> in your
+    PSR-4 autoloader (recommended);
+2.2. Alternatively, manually <code>include</code> the files you need.</li>
+</ol>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Tell your classes what they should depend on using in <code>inject</code> method supplied
+by the <code>Injector</code> trait:</p>
+
+<pre><code>&lt;?php
+
+use Disclosure\Injector;
+
+class MyClass
+{
+    use Injector;
+
+    public function __construct()
+    {
+        $this-&gt;inject(function (MyDependency $foo) {});
+    }
+}
+
+class MyDependency
+{
+}
+
+$myInstance = new MyClass;
+var_dump($myInstance-&gt;foo instanceof MyDependency); // true
+</code></pre>
+
+<p>For a list of full examples including type hinding, marker interfaces,
+inheritance and more, see the official documentation.</p>
+
+<p><em>Whoah!</em> Why not simply do <code>$this-&gt;foo = new MyDependency;</code> in the constructor?</p>
+
+<p>For a number of reasons:</p>
+
+<ul>
+<li>MyDependency could just be an interface;</li>
+<li>$foo could be previously resolved with a subclass or mock of MyDependency;</li>
+<li>In normal usage, there is only one $foo instance which this enforces without
+having to resort to all kinds of Singleton mockery;</li>
+<li>The injecting closure can perform operations on <code>$foo</code>;</li>
+<li>There is now no tight coupling;</li>
+<li>The closure can be anything callable, including regular functions or class
+methods, which - if you like that - can be defined in an external file;</li>
+<li>Direct assignment causes tight coupling.</li>
+</ul>
+
+<p>Yes, in the above example it doesn't add much, but see the complete
+documentation for real-world, practical examples of why dependency injection
+is generally a good idea.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
