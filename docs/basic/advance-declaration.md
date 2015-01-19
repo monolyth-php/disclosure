@@ -52,11 +52,9 @@ parameter `$db` with a compatible type, and inject that instead.
 
 ## Mocking services
 
-During testing, you might not want to use an actual `PDO` instance. I trust we
-don't have to explain why, but for those that are new to testing: a test almost
-certainly should not change your database.
-
-Assuming you're using PHPUnit, you could now write the following:
+During testing, you might not want to use an actual `PDO` instance. Assuming
+you're using PHPUnit, you could mock the database object by doing the
+following:
 
     <?php
 
@@ -64,7 +62,7 @@ Assuming you're using PHPUnit, you could now write the following:
         $db = new MockPDO;
     });
 
-    class ModelTest
+    class ModelTest extends PHPUnit_Framework_TestCase
     {
         public function testSomething()
         {
@@ -73,9 +71,9 @@ Assuming you're using PHPUnit, you could now write the following:
         }
     }
 
-Of course, since the `Model` constructor typehints the `$db` dependency, it's up
-to you to make sure `MockPDO` is compatible with that. But then again, it makes
-sense for a mock to implement the same interfaces as the real class.
+Of course, since the `Model` constructor typehints the `$db` dependency, it's
+up to you to make sure `MockPDO` is compatible with that. But then again, it
+makes sense for a mock to implement the same interfaces as the real class.
 
 Hence, a more complete real world example could look like this:
 
