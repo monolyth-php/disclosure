@@ -1,5 +1,8 @@
 # disclosure
-PHP5 dependency injection framework.
+PHP5 dependency injection and service locator framework.
+Most existing DI or Inversion of Control (IoC) solutions depend on extensive
+configuration files to define dependencies. This sucks; Disclosure is better
+and simpler (we think).
 
 Full documentation: http://disclosure.readthedocs.org/en/latest/
 
@@ -26,6 +29,38 @@ Add "monomelodies/disclosure" to your `composer.json` requirements:
     2.2. Alternatively, manually `include` the files you need.
 
 ## Usage
+
+Tell your classes what they should depend on:
+
+    <?php
+
+    use Disclosure\Injector;
+
+    class MyClass
+    {
+        use Injector;
+
+        public function __construct()
+        {
+            $this->inject(function (MyDependency $foo) {});
+        }
+    }
+
+    class MyDependency
+    {
+    }
+
+    $myInstance = new MyClass;
+    var_dump($myInstance->foo);
+
+Or define the dependency statically somewhere:
+
+    <?php
+
+    MyClass::inject(function (&$foo) {
+        $foo = new MyDependency;
+    });
+    
 
 Disclosure is a dependency injection and service locator framework, so
 your existing code has to be adapted to work with it. This means there
