@@ -7,7 +7,7 @@ function _($class, array $injects)
 {
     static $map = [];
 
-    $resolve = function ($for, $class) use ($map) {
+    $resolveClass = function ($for, $class) use (&$map) {
     };
 
     $tree = [];
@@ -19,11 +19,21 @@ function _($class, array $injects)
     if (!isset($map[$class])) {
         $map[$class] = [];
     }
-    var_dump($class, $map[$class]);
     foreach ($injects as $name => &$cname) {
+        if ($resolveClass($class, $cname)) {
+            continue;
+        }
         if (!is_scalar($cname)) {
             $map[$class][$name] = $cname;
             continue;
+        }
+        if (is_bool($cname)) {
+            foreach ($tree as $parent) {
+                if (isset($map[$parent][$name])) {
+                    $cname = $map[$parent][$name];
+                    continue 2;
+                }
+            }
         }
         foreach ($map[$class] as $key => $resolved) {
             if ($resolved instanceof $cname) {
@@ -40,7 +50,6 @@ function _($class, array $injects)
                 $cname = $map[$class][$name];
             }
         }
-        /*
         foreach ($tree as $parent) {
             if (isset($map[$parent])) {
                 foreach ($map[$parent] as $previous) {
@@ -54,13 +63,11 @@ function _($class, array $injects)
                 }
             }
         }
-        */
         if (is_string($cname) && class_exists($cname)) {
             $cname = new $cname;
             $map[$class][$name] = $cname;
         }
     }
-    var_dump($class, $map[$class]);
     return $injects;
 }
 
@@ -68,7 +75,8 @@ trait Injector
 {
     public function inject(callable $inject)
     {
-        $static = !isset($this) || __CLASS__ != get_class($this);
+        $cname = __CLASS__;
+        $static = !isset($this) || !($this instanceof $cname);
         $class = $static ? __CLASS__ : get_class($this);
         $reflection = new ReflectionFunction($inject);
         $parameters = $reflection->getParameters();
@@ -81,14 +89,8 @@ trait Injector
             }
         }
         $injections = _($class, $classes);
-        $previous = $injections;
-        var_dump(1, $injections);
         $reflection->invokeArgs($injections);
-        var_dump(2, $injections);
-        if ($previous != $injections) {
-            _($class, $injections);
-        }
-        var_dump(3, $injections);
+        _($class, $injections);
         $missing = false;
         if (!$static) {
             foreach ($injections as $requested => $value) {
