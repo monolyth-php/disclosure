@@ -1,12 +1,25 @@
 <?php
 
 use Disclosure\Injector;
+use Disclosure\Reinjector;
 
 /**
  * Test classes
  * {{{
  */
 class Basic
+{
+    public $bar = null;
+
+    use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function (BasicInjection $bar) {});
+    }
+}
+
+class Basic2
 {
     public $bar = null;
 
@@ -102,6 +115,24 @@ class Multiple
     {
         $this->inject(function($foo) {});
         $this->inject(function($baz, $bar) {});
+    }
+}
+
+class Reinjectme
+{
+    use Injector;
+    use Reinjector;
+
+    public function __construct()
+    {
+        $this->reinject(function(ArgsObject $bar) {});
+    }
+}
+
+class ArgsObject
+{
+    public function __construct($param)
+    {
     }
 }
 
