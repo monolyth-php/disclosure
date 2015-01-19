@@ -4,7 +4,9 @@ pages:
 
 - [index.md, Introduction, Quickstart]
 
-- [registering-dependencies.md, Usage, Registering dependencies]
-- [injecting-dependencies.md, Usage, Injecting dependencies]
+- [basic/simple.md, Basic usage, Simple assignment]
+- [basic/advance-declaration.md, Basic usage, Advance declaration]
+
+- [advanced/marker-interfaces.md, Advanced topics, Using marker interfaces]
 
 theme: readthedocs
