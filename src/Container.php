@@ -32,7 +32,10 @@ class Container
     
     private static function resolve($class, array $injects)
     {
-        $tree = [$class => $class] + class_parents($class);
+        $tree = ['*' => '*'];
+        if ($class != '*') {
+            $tree += [$class => $class] + class_parents($class);
+        }
         if (!isset(self::$map[$class])) {
             self::$map[$class] = [];
         }
@@ -62,11 +65,13 @@ class Container
             if (self::resolveByParents($cname, $tree)) {
                 continue;
             }
-            if (self::resolveByParents($cname, class_implements($class))) {
-                continue;
-            }
-            if (self::resolveByParents($cname, class_uses($class))) {
-                continue;
+            if ($class != '*') {
+                if (self::resolveByParents($cname, class_implements($class))) {
+                    continue;
+                }
+                if (self::resolveByParents($cname, class_uses($class))) {
+                    continue;
+                }
             }
             if (is_string($cname) && class_exists($cname)) {
                 $cname = new $cname;
@@ -93,7 +98,9 @@ class Container
                     }
                 }
             }
-            if (self::resolveByParents($class, class_implements($parent))) {
+            if ($parent != '*'
+                && self::resolveByParents($class, class_implements($parent))
+            ) {
                 return true;
             }
         }
