@@ -1,0 +1,10 @@
+site_name: Disclosure documentation
+
+pages:
+
+- [index.md, Introduction, Quickstart]
+
+- [registering-dependencies.md, Usage, Registering dependencies]
+- [injecting-dependencies.md, Usage, Injecting dependencies]
+
+theme: readthedocs
