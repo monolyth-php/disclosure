@@ -56,3 +56,21 @@ by the `Injector` trait:
 
 For a list of full examples including type hinding, marker interfaces,
 inheritance and more, see the official documentation.
+
+_Whoah!_ Why not simply do `$this->foo = new MyDependency;` in the constructor?
+
+For a number of reasons:
+
+- MyDependency could just be an interface;
+- $foo could be previously resolved with a subclass or mock of MyDependency;
+- In normal usage, there is only one $foo instance which this enforces without
+    having to resort to all kinds of Singleton mockery;
+- The injecting closure can perform operations on `$foo`;
+- There is now no tight coupling;
+- The closure can be anything callable, including regular functions or class
+    methods, which - if you like that - can be defined in an external file;
+- Direct assignment causes tight coupling.
+
+Yes, in the above example it doesn't add much, but see the complete
+documentation for real-world, practical examples of why dependency injection
+is generally a good idea.
