@@ -51,5 +51,59 @@ class ChildInheritance extends ParentInheritance
     }
 }
 
+interface Marker
+{
+}
+
+interface DeepMarker extends Marker
+{
+}
+
+class ImplementsMarker implements Marker
+{
+    use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function ($bar) {});
+    }
+}
+
+class ImplementsDeepMarker implements DeepMarker
+{
+    use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function ($bar) {});
+    }
+}
+
+trait TraitDependency
+{
+}
+
+class UsesTrait
+{
+    use TraitDependency;
+    use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function($bar) {});
+    }
+}
+
+class Multiple
+{
+    use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function($foo) {});
+        $this->inject(function($baz, $bar) {});
+    }
+}
+
 /** }}} */
 
