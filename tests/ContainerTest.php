@@ -39,6 +39,21 @@ class BasicInjectionInherited extends BasicInjection
 {
 }
 
+class ParentInheritance
+{
+    use Injector;
+}
+
+class ChildInheritance extends ParentInheritance
+{
+    public function __construct()
+    {
+        $this->inject(function ($bar) {});
+    }
+}
+
+/** }}} */
+
 /*
 class Baz extends Foo
 {
@@ -65,6 +80,15 @@ class ContainerTest extends PHPUnit_Framework_TestCase
         $foo = new BasicInheritance;
         $this->assertInstanceOf('BasicInjection', $foo->bar);
         $this->assertInstanceOf('BasicInjectionInherited', $foo->bar);
+    }
+
+    public function testParentInheritance()
+    {
+        ParentInheritance::inject(function (&$bar) {
+            $bar = new BasicInjection;
+        });
+        $foo = new ChildInheritance;
+        $this->assertInstanceOf('BasicInjection', $foo->bar);
     }
 
     /*
