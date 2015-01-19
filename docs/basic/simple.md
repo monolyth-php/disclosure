@@ -1,8 +1,8 @@
 # Simple assignment
 
 In its simplest form, you inject a variable into a class in the constructor.
-Disclosure will figure out an object of this class wasn't used previously, and
-will instantiate one for you:
+Disclosure will figure out whether an object of this class was used previously
+on the calling class, and if not will instantiate one for you:
 
     <?php
 
@@ -15,6 +15,7 @@ will instantiate one for you:
         public function __construct()
         {
             $this->inject(function(Bar $bar) {});
+            // $this->bar is now a Bar.
         }
     }
 
