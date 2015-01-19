@@ -16,6 +16,18 @@ class InjectorTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('BasicInjection', $foo->bar);
     }
 
+    public function testMultipleInjections()
+    {
+        Basic::inject(function (&$bar, &$baz) {
+            $bar = new BasicInjection;
+            $baz = new BasicInjectionInherited;
+        });
+        $foo = new Basic;
+        $foo->inject(function (BasicInjectionInherited $baz) {});
+        $this->assertInstanceOf('BasicInjection', $foo->bar);
+        $this->assertInstanceOf('BasicInjectionInherited', $foo->baz);
+    }
+
     public function testBasicInherited()
     {
         BasicInheritance::inject(function (&$bar) {
@@ -33,6 +45,19 @@ class InjectorTest extends PHPUnit_Framework_TestCase
         });
         $foo = new ChildInheritance;
         $this->assertInstanceOf('BasicInjection', $foo->bar);
+    }
+
+    public function testMultiple()
+    {
+        Multiple::inject(function (&$foo, &$bar, &$baz) {
+            $foo = new BasicInjection;
+            $bar = new BasicInjectionInherited;
+            $baz = new ChildInheritance;
+        });
+        $test = new Multiple;
+        $this->assertTrue(get_class($test->foo) == 'BasicInjection');
+        $this->assertTrue(get_class($test->bar) == 'BasicInjectionInherited');
+        $this->assertTrue(get_class($test->baz) == 'ChildInheritance');
     }
 
     /*
