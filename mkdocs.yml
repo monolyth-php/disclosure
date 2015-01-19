@@ -8,5 +8,6 @@ pages:
 - [basic/advance-declaration.md, Basic usage, Advance declaration]
 
 - [advanced/marker-interfaces.md, Advanced topics, Using marker interfaces]
+- [advanced/sharing.md, Advanced topics, (Un)sharing dependencies]
 
 theme: readthedocs
