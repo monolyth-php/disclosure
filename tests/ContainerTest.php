@@ -1,52 +1,39 @@
 <?php
 
-use Disclosure\Container;
 use Disclosure\Injector;
 use Disclosure\UnregisteredException;
 
-$container = Container::instance();
-$container->register('Bar');
-$container->register('Alias', 'Baz');
-$container->register('Service', new Bar);
-$container->register('Service2', $container->get('Service'));
-$container->register('Service3', new Bar);
-
 class Foo
 {
+    public $bar = null;
+
     use Injector;
-
-    public function __construct()
-    {
-        $this->inject('Bar', 'Alias', 'Service', 'Service2', 'Service3');
-    }
-}
-
-class FooUnregistered
-{
-    use Injector;
-
-    public function __construct()
-    {
-        $this->inject('SomethingUnregistered');
-    }
 }
 
 class Bar
 {
 }
 
-class Baz
+class Baz extends Foo
 {
+    use Injector;
 }
 
 class ContainerTest extends PHPUnit_Framework_TestCase
 {
     public function testFooHasBar()
     {
+        Foo::inject(function ($bar) {
+            return new Bar;
+        });
+        Baz::inject(function ($bar) {
+            return new Bar;
+        });
         $foo = new Foo;
-        $this->assertInstanceOf('Bar', $foo->Bar);
+        $this->assertInstanceOf('Bar', $foo->bar);
     }
 
+    /*
     public function testFooWithAlias()
     {
         $foo = new Foo;
@@ -69,5 +56,6 @@ class ContainerTest extends PHPUnit_Framework_TestCase
         }
         $this->assertInstanceOf('Disclosure\UnregisteredException', $e);
     }
+    */
 }
 
