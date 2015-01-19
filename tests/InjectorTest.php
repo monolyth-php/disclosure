@@ -59,30 +59,5 @@ class InjectorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(get_class($test->bar) == 'BasicInjectionInherited');
         $this->assertTrue(get_class($test->baz) == 'ChildInheritance');
     }
-
-    /*
-    public function testFooWithAlias()
-    {
-        $foo = new Foo;
-        $this->assertInstanceOf('Baz', $foo->Alias);
-    }
-
-    public function testService()
-    {
-        $foo = new Foo;
-        $this->assertSame($foo->Service, $foo->Service2);
-        $this->assertNotSame($foo->Service, $foo->Service3);
-    }
-
-    public function testUnregistered()
-    {
-        $e = null;
-        try {
-            $foo = new FooUnregistered;
-        } catch (Exception $e) {
-        }
-        $this->assertInstanceOf('Disclosure\UnregisteredException', $e);
-    }
-    */
 }
 
