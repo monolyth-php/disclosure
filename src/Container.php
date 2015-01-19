@@ -1,75 +1,114 @@
 <?php
 
 namespace Disclosure;
-use BadMethodCallException;
+use ReflectionFunction;
 
 class Container
 {
-    private $registered = [];
+    private static $map = [];
 
-    private function __construct()
+    public static function inject($class, callable $inject)
     {
-    }
-
-    public function instance()
-    {
-        static $container;
-        if (!isset($container)) {
-            $container = new Container;
-        }
-        return $container;
-    }
-
-    public function register($arg1, $arg2 = null)
-    {
-        if (isset($arg2)) {
-            $name = $arg1;
-            $class = $arg2;
-        } else {
-            $class = $arg1;
-            // Guesstimate dependency name:
-            if (is_string($arg1)) {
-                $parts = explode('\\', $arg1);
-                $name = array_pop($parts);
-            } elseif (is_array($arg1) && is_callable($arg1)) {
-                $parts = explode('\\', $arg1[0]);
-                $name = array_pop($parts);
-            } elseif (is_object($arg1)) {
-                if (is_callable($arg1)) {
-                    $name = count($this->registered) + 1;
-                } else {
-                    $cname = get_class($arg1);
-                    $parts = explode('\\', $cname);
-                    $name = array_pop($parts);
-                }
+        $reflection = new ReflectionFunction($inject);
+        $parameters = $reflection->getParameters();
+        $classes = [];
+        foreach ($parameters as $idx => $parameter) {
+            if ($requestedclass = $parameter->getClass()) {
+                $classes[$parameter->name] = $requestedclass->name;
             } else {
-                throw new BadMethodCallException;
+                $classes[$parameter->name] = true;
             }
         }
-        $this->registered[$name] = $class;
-        return $name;
+        $injections = self::resolve($class, $classes);
+        foreach ($injections as $key => &$value) {
+            if (isset($classes[$key])) {
+                $classes[$key] = $value;
+            }
+        }
+        $reflection->invokeArgs($classes);
+        self::resolve($class, $classes);
+        return $classes;
+    }
+    
+    private static function resolve($class, array $injects)
+    {
+        $tree = [$class => $class] + class_parents($class);
+        if (!isset(self::$map[$class])) {
+            self::$map[$class] = [];
+        }
+        foreach ($injects as $name => &$cname) {
+            if (!is_scalar($cname)) {
+                self::$map[$class][$name] = $cname;
+                continue;
+            }
+            if (is_bool($cname) && self::resolveByName($name, $cname, $tree)) {
+                continue;
+            }
+            foreach (self::$map[$class] as $key => $resolved) {
+                if (!class_exists($cname) || $resolved instanceof $cname) {
+                    $cname = $resolved;
+                    continue 2;
+                }
+            }
+            if (!is_bool($cname)) {
+                if (!isset(self::$map[$class][$name])) {
+                    self::$map[$class][$name] = $cname;
+                } elseif (!is_string(self::$map[$class][$name])
+                    && get_class(self::$map[$class][$name]) == $cname
+                ) {
+                    $cname = self::$map[$class][$name];
+                }
+            }
+            if (self::resolveByParents($cname, $tree)) {
+                continue;
+            }
+            if (self::resolveByParents($cname, class_implements($class))) {
+                continue;
+            }
+            if (self::resolveByParents($cname, class_uses($class))) {
+                continue;
+            }
+            if (is_string($cname) && class_exists($cname)) {
+                $cname = new $cname;
+                self::$map[$class][$name] = $cname;
+            } elseif (!is_scalar($cname)) {
+                self::$map[$class][$name] = $cname;
+            }
+        }
+        return $injects;
     }
 
-    public function unregister($name)
+    private static function resolveByParents(&$class, array $parents)
     {
-        unset($this->registered[$name]);
+        foreach ($parents as $parent) {
+            if (isset(self::$map[$parent])) {
+                foreach (self::$map[$parent] as $previous) {
+                    if (!is_string($previous)
+                        && !is_object($class)
+                        && is_object($previous)
+                        && get_class($previous) == $class
+                    ) {
+                        $class = $previous;
+                        return true;
+                    }
+                }
+            }
+            if (self::resolveByParents($class, class_implements($parent))) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public function get($name)
+    private static function resolveByName($name, &$class, array $classes)
     {
-        return function() use($name) {
-            if (!isset($this->registered[$name])) {
-                throw new UnregisteredException;
+        foreach ($classes as $parent) {
+            if (isset(self::$map[$parent][$name])) {
+                $class = self::$map[$parent][$name];
+                return true;
             }
-            $found = $this->registered[$name];
-            if (is_callable($found)) {
-                return $found();
-            } elseif (is_object($found)) {
-                return $found;
-            } elseif (class_exists($found)) {
-                return new $found;
-            }
-        };
+        }
+        return false;
     }
 }
 
