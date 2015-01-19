@@ -3,34 +3,68 @@
 use Disclosure\Injector;
 use Disclosure\UnregisteredException;
 
-class Foo
+/**
+ * Test classes
+ * {{{
+ */
+class Basic
 {
     public $bar = null;
 
     use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function (BasicInjection $bar) {});
+    }
 }
 
-class Bar
+class BasicInheritance
+{
+    public $bar = null;
+
+    use Injector;
+
+    public function __construct()
+    {
+        $this->inject(function (BasicInjection $bar) {});
+    }
+}
+
+class BasicInjection
 {
 }
 
+class BasicInjectionInherited extends BasicInjection
+{
+}
+
+/*
 class Baz extends Foo
 {
     use Injector;
 }
+*/
 
 class ContainerTest extends PHPUnit_Framework_TestCase
 {
-    public function testFooHasBar()
+    public function testBasicHasBasicInjection()
     {
-        Foo::inject(function ($bar) {
-            return new Bar;
+        Basic::inject(function (&$bar) {
+            $bar = new BasicInjection;
         });
-        Baz::inject(function ($bar) {
-            return new Bar;
+        $foo = new Basic;
+        $this->assertInstanceOf('BasicInjection', $foo->bar);
+    }
+
+    public function testBasicInherited()
+    {
+        BasicInheritance::inject(function (&$bar) {
+            $bar = new BasicInjectionInherited;
         });
-        $foo = new Foo;
-        $this->assertInstanceOf('Bar', $foo->bar);
+        $foo = new BasicInheritance;
+        $this->assertInstanceOf('BasicInjection', $foo->bar);
+        $this->assertInstanceOf('BasicInjectionInherited', $foo->bar);
     }
 
     /*
