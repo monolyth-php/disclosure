@@ -3,65 +3,9 @@
 use Disclosure\Injector;
 use Disclosure\UnregisteredException;
 
-/**
- * Test classes
- * {{{
- */
-class Basic
-{
-    public $bar = null;
+require_once __DIR__.'/classes/test.php';
 
-    use Injector;
-
-    public function __construct()
-    {
-        $this->inject(function (BasicInjection $bar) {});
-    }
-}
-
-class BasicInheritance
-{
-    public $bar = null;
-
-    use Injector;
-
-    public function __construct()
-    {
-        $this->inject(function (BasicInjection $bar) {});
-    }
-}
-
-class BasicInjection
-{
-}
-
-class BasicInjectionInherited extends BasicInjection
-{
-}
-
-class ParentInheritance
-{
-    use Injector;
-}
-
-class ChildInheritance extends ParentInheritance
-{
-    public function __construct()
-    {
-        $this->inject(function ($bar) {});
-    }
-}
-
-/** }}} */
-
-/*
-class Baz extends Foo
-{
-    use Injector;
-}
-*/
-
-class ContainerTest extends PHPUnit_Framework_TestCase
+class InjectorTest extends PHPUnit_Framework_TestCase
 {
     public function testBasicHasBasicInjection()
     {
