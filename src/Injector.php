@@ -1,11 +1,10 @@
 <?php
 
 namespace Disclosure;
-use ReflectionClass;
 
 trait Injector
 {
-    public function inject(callable $inject, $reinject = false)
+    public function inject(callable $inject)
     {
         $cname = __CLASS__;
         $static = !isset($this) || !($this instanceof $cname);
@@ -18,27 +17,6 @@ trait Injector
                 continue;
             }
             if (!$static) {
-                if ($reinject) {
-                    $reflected = new ReflectionClass($value);
-                    $constructor = $reflected->getConstructor();
-                    if ($constructor) {
-                        $args = $constructor->getParameters();
-                        $makeNew = true;
-                        foreach ($args as $parameter) {
-                            if (!$parameter->isOptional()) {
-                                $makeNew = false;
-                                break;
-                            }
-                        }
-                    } else {
-                        $makeNew = false;
-                    }
-                    if (!$makeNew) {
-                        $value = clone $value;
-                    } else {
-                        $value = $reflected->newInstance();
-                    }
-                }
                 $this->$requested = $value;
             }
         }
