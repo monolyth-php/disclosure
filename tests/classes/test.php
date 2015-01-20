@@ -1,7 +1,6 @@
 <?php
 
 use Disclosure\Injector;
-use Disclosure\Reinjector;
 
 /**
  * Test classes
@@ -121,11 +120,10 @@ class Multiple
 class Reinjectme
 {
     use Injector;
-    use Reinjector;
 
     public function __construct()
     {
-        $this->reinject(function(ArgsObject $bar) {});
+        $this->inject(function(ArgsObject $bar) {}, true);
     }
 }
 
