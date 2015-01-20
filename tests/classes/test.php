@@ -123,7 +123,7 @@ class Reinjectme
 
     public function __construct()
     {
-        $this->inject(function(ArgsObject $bar) {}, true);
+        $this->inject(function(ArgsObject $bar) { return true; });
     }
 }
 
