@@ -57,7 +57,7 @@ to the injector:
             // $this->bar is now a _new_ Bar.
     }
 
-When call with `true`, all injected instances are new and shiny. For classes
+When called with `true`, all injected instances are new and shiny. For classes
 without a constructor or with a constructor without (required) arguments, a new
 object is actually instantiated. When Disclosure detects it cannot safely
 instantiate, it uses a `clone` of the existing object instead (which is the next
