@@ -1,6 +1,7 @@
 <?php
 
 namespace Disclosure;
+use ReflectionClass;
 use ReflectionFunction;
 
 class Container
@@ -25,7 +26,30 @@ class Container
                 $classes[$key] = $value;
             }
         }
-        $reflection->invokeArgs($classes);
+        $reinject = $reflection->invokeArgs($classes);
+        if ($reinject) {
+            foreach ($classes as &$value) {
+                $reflected = new ReflectionClass($value);
+                $constructor = $reflected->getConstructor();
+                if ($constructor) {
+                    $args = $constructor->getParameters();
+                    $makeNew = true;
+                    foreach ($args as $parameter) {
+                        if (!$parameter->isOptional()) {
+                            $makeNew = false;
+                            break;
+                        }
+                    }
+                } else {
+                    $makeNew = false;
+                }
+                if (!$makeNew) {
+                    $value = clone $value;
+                } else {
+                    $value = $reflected->newInstance();
+                }
+            }
+        }
         self::resolve($class, $classes);
         return $classes;
     }
