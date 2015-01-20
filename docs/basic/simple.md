@@ -40,17 +40,5 @@ the injected properties:
     $foo = new Foo;
     echo $foo->bar; // Error: $bar is a private property.
 
-Injecting works for any non-scalar value by the way (injecting scalars is...
-less than useful):
-
-    <?php
-
-    Foo::inject(function (&$array, &$callable) {
-        $array = [1, 2, 3];
-        $callable = function ($what = 'world') {
-            return "Hello $what!";
-        };
-    });
-
 You cannot "unregister" a dependency, because really, why would you? Just don't
 inject it where you don't need it.
