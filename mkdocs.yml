@@ -10,4 +10,7 @@ pages:
 - [advanced/marker-interfaces.md, Advanced topics, Using marker interfaces]
 - [advanced/sharing.md, Advanced topics, (Un)sharing dependencies]
 
+- [api/container.md, API reference, Container]
+- [api/injector.md, API reference, Injector]
+
 theme: readthedocs
