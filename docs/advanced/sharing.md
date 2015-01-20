@@ -42,8 +42,7 @@ takes precendence).
 ## Forcing a new instance for each injection
 
 Sometimes, you might also want the inverse: an injected dependency that is in
-fact a new instance of a class. Just pass a second argument `$reinject = true`
-to the injector:
+fact a new instance of a class. Just return `true` from the injector:
 
     <?php
 
@@ -53,12 +52,16 @@ to the injector:
 
         public function __construct()
         {
-            $this->inject(function(Bar $bar) {}, true);
+            $this->inject(function(Bar $bar) { return true; });
             // $this->bar is now a _new_ Bar.
     }
 
-When called with `true`, all injected instances are new and shiny. For classes
+Now all injected instances from this injector are new and shiny. For classes
 without a constructor or with a constructor without (required) arguments, a new
 object is actually instantiated. When Disclosure detects it cannot safely
 instantiate, it uses a `clone` of the existing object instead (which is the next
 best thing).
+
+> It's perfectly possible to call `inject` multiple times and/or from other
+> places than a constructor. Calls returning `true` and not may also be mixed
+> and matched to your heart's content.
