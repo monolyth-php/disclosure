@@ -22,6 +22,13 @@ management.
 The trait exposes a single method: `inject`, which takes a single argument:
 a callable defining your dependencies.
 
+## Injectable
+
+The Injectable interface can be implemented by classes to signal they support
+Disclosure injection. The support can be via the standard Injector trait, or via
+a custom implementation. The implementing of Injectable can be used as a marker
+in your code, but Disclosure itself does not enforce it.
+
 ## `Injector::inject`
 
 There are two ways to use `inject`:
