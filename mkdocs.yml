@@ -4,13 +4,13 @@ pages:
 
 - [index.md, Introduction, Quickstart]
 
-- [basic/simple.md, Basic usage, Simple assignment]
-- [basic/advance-declaration.md, Basic usage, Advance declaration]
+- [basic/simple.md, "Basic usage", "Simple assignment"]
+- [basic/advance-declaration.md, "Basic usage", "Advance declaration"]
 
-- [advanced/marker-interfaces.md, Advanced topics, Using marker interfaces]
-- [advanced/sharing.md, Advanced topics, (Un)sharing dependencies]
+- [advanced/marker-interfaces.md, "Advanced topics", "Using marker interfaces"]
+- [advanced/sharing.md, "Advanced topics", "(Un)sharing dependencies"]
 
-- [api/container.md, API reference, Container]
-- [api/injector.md, API reference, Injector]
+- [api/container.md, "API reference", Container]
+- [api/injector.md, "API reference", Injector]
 
 theme: readthedocs
