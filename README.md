@@ -61,9 +61,9 @@ _Whoah!_ Why not simply do `$this->foo = new MyDependency;` in the constructor?
 
 For a number of reasons:
 
-- MyDependency could just be an interface;
-- $foo could be previously resolved with a subclass or mock of MyDependency;
-- In normal usage, there is only one $foo instance which this enforces without
+- `MyDependency` could just be an interface;
+- `$foo` could be previously resolved with a subclass or mock of `MyDependency`;
+- In normal usage, there is only one `$foo` instance which this enforces without
     having to resort to all kinds of Singleton mockery;
 - The injecting closure can perform operations on `$foo`;
 - There is now no tight coupling;
