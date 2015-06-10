@@ -13,4 +13,4 @@ pages:
 - [api/container.md, "API reference", Container]
 - [api/injector.md, "API reference", Injector]
 
-theme: readthedocs
+theme: united
