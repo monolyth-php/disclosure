@@ -1,4 +1,6 @@
 site_name: Disclosure documentation
+site_url: http://disclosure.monomelodies.nl/docs/
+repo_url: https://github.com/monomelodies/disclosure
 
 pages:
 - Introduction:
