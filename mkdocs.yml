@@ -1,15 +1,15 @@
 site_name: Disclosure documentation
 
 pages:
-
-- [index.md, Introduction, Quickstart]
-
-- [basic/simple.md, "Basic usage", "Simple assignment"]
-- [basic/advance-declaration.md, "Basic usage", "Advance declaration"]
-
-- [advanced/marker-interfaces.md, "Advanced topics", "Using marker interfaces"]
-- [advanced/sharing.md, "Advanced topics", "(Un)sharing dependencies"]
-
-- [api/container.md, "API reference", Container]
-- [api/injector.md, "API reference", Injector]
+- Introduction:
+    - 'Quickstart': 'index.md'
+- Basic usage:
+    - 'Simple assignment': 'basic/simple.md'
+    - 'Advance declaration': 'basic/advance-declaration.md'
+- Advanced topics:
+    - 'Using marker interfaces': 'advanced/marker-interfaces.md'
+    - '(Un)sharing dependencies': 'advanced/sharing.md'
+- API reference:
+    - 'Container': 'api/container.md'
+    - 'Injector': 'api/injector.md'
 
