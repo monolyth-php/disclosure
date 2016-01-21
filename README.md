@@ -9,22 +9,14 @@ and simpler (we think).
 ## Installation
 
 ### Composer (recommended)
-Add "monomelodies/disclosure" to your `composer.json` requirements:
-
-    {
-        "require": {
-            "monomelodies/disclosure": "^1.0.0"
-        }
-    }
+```sh
+composer require monomelodies/disclosure
+```
 
 ### Manual installation
-1. Get the code;
-    1. Clone the repository, e.g. from GitHub;
-    2. Download the ZIP (e.g. from Github) and extract.
-2. Make your project recognize Reroute:
-    1. Register `/path/to/reroute/src` for the namespace `Reroute\\` in your
-       PSR-4 autoloader (recommended);
-    2. Alternatively, manually `include` the files you need.
+1. Get or clonse the code;
+2. Register `/path/to/reroute/src` for the namespace `Reroute\\` in your PSR-4
+   autoloader.
 
 ## Usage
 Tell your classes what they should depend on using in `inject` method supplied
@@ -54,7 +46,7 @@ var_dump($myInstance->foo instanceof MyDependency); // true
 
 ```
 
-For a list of full examples including type hinding, marker interfaces,
+For a list of full examples including type hinting, marker interfaces,
 inheritance and more, see the official documentation.
 
 _Whoah!_ Why not simply do `$this->foo = new MyDependency;` in the constructor?
