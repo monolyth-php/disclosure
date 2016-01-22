@@ -4,6 +4,9 @@ namespace Disclosure;
 
 trait Injector
 {
+    /**
+     * @Untestable
+     */
     public function inject(callable $inject)
     {
         $cname = __CLASS__;
