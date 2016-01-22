@@ -1,17 +1,23 @@
 <?php
 
+namespace Disclosure\Test;
+
 use Disclosure\Container;
+use Demo;
 
-require_once __DIR__.'/classes/test.php';
-
-class SharingTest extends PHPUnit_Framework_TestCase
+/**
+ * @Description Classes should share injections
+ */
+class SharingTest
 {
-    public function testEquality()
+    /**
+     * @Description {0}::$bar is the same class but a different instance than $foo2->bar
+     */
+    public function testEquality(Demo\Basic $foo, Demo\Basic2 $foo2)
     {
-        $foo = new Basic;
-        $foo2 = new Basic2;
-        $this->assertTrue($foo->bar == $foo2->bar);
-        $this->assertNotTrue($foo->bar === $foo2->bar);
+        return function ($result) use ($foo2) {
+            return $result == $foo2->bar && $result !== $foo2->bar;
+        };
     }
 }
 
