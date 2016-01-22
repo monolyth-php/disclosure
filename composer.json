@@ -23,7 +23,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Disclosure\\Test\\": "tests"
+            "Disclosure\\Test\\": "tests",
+            "Demo\\": "demo"
         }
     }
 }    
