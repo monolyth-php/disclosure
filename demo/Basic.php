@@ -4,7 +4,7 @@ namespace Demo;
 
 use Disclosure\Injector;
 
-class Basic extends Accessor
+class Basic
 {
     public $bar = null;
 
