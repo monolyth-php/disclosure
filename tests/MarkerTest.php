@@ -1,37 +1,37 @@
 <?php
 
-use Disclosure\Container;
+namespace Disclosure\Test;
+
 use Disclosure\UnregisteredException;
+use Demo;
 
-require_once __DIR__.'/classes/test.php';
-
-class MarkerTest extends PHPUnit_Framework_TestCase
+/**
+ * @Description Markers should trigger injection
+ */
+class MarkerTest
 {
-    public function testMarkerInterfaceResolvesDependency()
+    /**
+     * @Description {0}::$bar is a BasicInjection
+     */
+    public function testMarkerInterfaceResolvesDependency(Demo\ImplementsMarker $foo)
     {
-        Container::inject('Marker', function(&$bar) {
-            $bar = new BasicInjection;
-        });
-        $foo = new ImplementsMarker;
-        $this->assertInstanceOf('BasicInjection', $foo->bar);
+        return new Demo\BasicInjection;
     }
 
-    public function testMarkerInterfaceDeep()
+    /**
+     * @Description {0}::$bar is deeply injected as BasicInjection
+     */
+    public function testMarkerInterfaceDeep(Demo\ImplementsDeepMarker $foo)
     {
-        Container::inject('Marker', function(&$bar) {
-            $bar = new BasicInjection;
-        });
-        $foo = new ImplementsDeepMarker;
-        $this->assertInstanceOf('BasicInjection', $foo->bar);
+        return new Demo\BasicInjection;
     }
 
-    public function testTraitResolvesDependency()
+    /**
+     * @Description {0}::$bar is resolved by trait as BasicInjection
+     */
+    public function testTraitResolvesDependency(Demo\UsesTrait $foo)
     {
-        Container::inject('TraitDependency', function(&$bar) {
-            $bar = new BasicInjection;
-        });
-        $foo = new UsesTrait;
-        $this->assertInstanceOf('BasicInjection', $foo->bar);
+        return new Demo\BasicInjection;
     }
 }
 
