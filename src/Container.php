@@ -23,7 +23,7 @@ class Container
         $injections = self::resolve($class, $classes);
         foreach ($injections as $key => &$value) {
             if (isset($classes[$key])) {
-                $classes[$key] = $value;
+                $classes[$key] =& $value;
             }
         }
         $reinject = $reflection->invokeArgs($classes);
