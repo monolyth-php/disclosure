@@ -1,30 +1,41 @@
 <?php
 
+namespace Disclosure\Test;
+
+use Demo;
 use Disclosure\Container;
+use Gentry\Group;
 
-require_once __DIR__.'/classes/test.php';
-
-class ReinjectTest extends PHPUnit_Framework_TestCase
+/**
+ * @Description Classes can be reinjected
+ */
+class ReinjectTest
 {
-    public function testReinject()
+    public function testReinject(Demo\Reinjectme $foo)
     {
-        Reinjectme::inject(function (&$bar) {
-            $bar = new ArgsObject(1);
+        Demo\Reinjectme::inject(function (&$bar) {
+            $bar = new Demo\ArgsObject(2);
         });
-        $foo = new Reinjectme;
-        $foo2 = new Reinjectme;
-        $this->assertTrue($foo->bar == $foo2->bar);
-        $this->assertNotTrue($foo->bar === $foo2->bar);
-    }
+        $foo2 = new Demo\Reinjectme;
 
-    public function testGlobal()
-    {
-        Container::inject('*', function (&$foo) {
-            $foo = new BasicInjection;
-        });
-        $foo = new Reinjectme;
-        $foo->inject(function ($foo) {});
-        $this->assertInstanceOf('BasicInjection', $foo->foo);
+        return new Group($this, $foo, [
+            /**
+             * @Description {0}::$bar is of the same type as $foo2->bar
+             */
+            function () use ($foo2) {
+                return function ($result) use ($foo2) {
+                    return $result == $foo2->bar;
+                };
+            },
+            /**
+             * @Description {0}::$bar is not the same instance as $foo2->bar
+             */
+            function () use ($foo2) {
+                return function ($result) use ($foo2) {
+                    return $result !== $foo2->bar;
+                };
+            },
+        ]);
     }
 }
 
