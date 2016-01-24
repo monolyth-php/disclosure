@@ -9,7 +9,7 @@ class ParentInheritance
     use Injector;
 }
 
-ParentInheritance::inject(function (&$bar) {
+ParentInheritance::register(function (&$bar) {
     $bar = new BasicInjection;
 });
 
