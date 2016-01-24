@@ -15,7 +15,7 @@ class Multiple
     }
 }
 
-Multiple::inject(function (&$foo, &$bar, &$baz) {
+Multiple::register(function (&$foo, &$bar, &$baz) {
     $foo = new BasicInjection;
     $bar = new BasicInjectionInherited;
     $baz = new ChildInheritance;
