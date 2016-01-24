@@ -54,7 +54,7 @@ class InjectorTest
      */
     public function statically(Demo\Basic &$foo = null)
     {
-        Demo\Basic::inject(function (Demo\BasicInjection $foobar) {});
+        Demo\Basic::register(function (Demo\BasicInjection $foobar) {});
         $foo = new Demo\Basic;
         $foo->inject(function ($foobar) {});
         return new Demo\BasicInjection;
