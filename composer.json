@@ -17,7 +17,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Disclosure\\": "src"
+            "Disclosure\\": "src",
+            "Psr\\Container\\": "psr"
         }
     },
     "autoload-dev": {
