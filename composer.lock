@@ -4,31 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c45b8864cd672d2aa6d4dcdb60354d84",
-    "content-hash": "87d039d640bbb394dbd0b38d69f26256",
+    "hash": "2b8e8108096ca6702682e1280f9aa5a3",
+    "content-hash": "e071e07a4dbadcc271981d2e6bfca474",
     "packages": [],
     "packages-dev": [
         {
             "name": "monomelodies/gentry",
-            "version": "dev-master",
+            "version": "0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/monomelodies/gentry.git",
-                "reference": "d11d0a15e096aa4681d0dcb9e7113c75deb3c75c"
+                "reference": "3e0a50d64e4932aaf10793735861729eb23402a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/monomelodies/gentry/zipball/d11d0a15e096aa4681d0dcb9e7113c75deb3c75c",
-                "reference": "d11d0a15e096aa4681d0dcb9e7113c75deb3c75c",
+                "url": "https://api.github.com/repos/monomelodies/gentry/zipball/3e0a50d64e4932aaf10793735861729eb23402a5",
+                "reference": "3e0a50d64e4932aaf10793735861729eb23402a5",
                 "shasum": ""
             },
             "require": {
                 "monomelodies/kingconf": "^1.0",
                 "simoneast/simple-ansi-colors": "^1.0",
                 "zeptech/annotations": "^1.0.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "5.*"
             },
             "bin": [
                 "gentry"
@@ -50,7 +47,7 @@
                 }
             ],
             "description": "PHP unit test generation tools",
-            "time": "2016-01-20 18:16:01"
+            "time": "2016-01-24 09:19:43"
         },
         {
             "name": "monomelodies/kingconf",
@@ -240,9 +237,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "monomelodies/gentry": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
