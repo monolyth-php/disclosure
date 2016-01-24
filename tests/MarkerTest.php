@@ -6,12 +6,12 @@ use Disclosure\UnregisteredException;
 use Demo;
 
 /**
- * @Description Markers should trigger injection
+ * @Feautre Markers should trigger injection
  */
 class MarkerTest
 {
     /**
-     * @Description {0}::$bar is a BasicInjection
+     * @Scenario {0}::$bar is a BasicInjection
      */
     public function testMarkerInterfaceResolvesDependency(Demo\ImplementsMarker $foo)
     {
@@ -19,7 +19,7 @@ class MarkerTest
     }
 
     /**
-     * @Description {0}::$bar is deeply injected as BasicInjection
+     * @Scenario {0}::$bar is deeply injected as BasicInjection
      */
     public function testMarkerInterfaceDeep(Demo\ImplementsDeepMarker $foo)
     {
@@ -27,7 +27,7 @@ class MarkerTest
     }
 
     /**
-     * @Description {0}::$bar is resolved by trait as BasicInjection
+     * @Scenario {0}::$bar is resolved by trait as BasicInjection
      */
     public function testTraitResolvesDependency(Demo\UsesTrait $foo)
     {

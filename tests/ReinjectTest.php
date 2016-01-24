@@ -7,7 +7,7 @@ use Disclosure\Container;
 use Gentry\Group;
 
 /**
- * @Description Classes can be reinjected
+ * @Feature Classes can be reinjected
  */
 class ReinjectTest
 {
@@ -20,7 +20,7 @@ class ReinjectTest
 
         return new Group($this, $foo, [
             /**
-             * @Description {0}::$bar is of the same type as $foo2->bar
+             * @Scenario {0}::$bar is of the same type as $foo2->bar
              */
             function () use ($foo2) {
                 return function ($result) use ($foo2) {
@@ -28,7 +28,7 @@ class ReinjectTest
                 };
             },
             /**
-             * @Description {0}::$bar is not the same instance as $foo2->bar
+             * @Scenario {0}::$bar is not the same instance as $foo2->bar
              */
             function () use ($foo2) {
                 return function ($result) use ($foo2) {

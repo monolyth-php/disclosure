@@ -6,12 +6,12 @@ use Disclosure\Container;
 use Demo;
 
 /**
- * @Description Classes should share injections
+ * @Feature Classes should share injections
  */
 class SharingTest
 {
     /**
-     * @Description {0}::$bar is the same class but a different instance than $foo2->bar
+     * @Scenario {0}::$bar is the same class but a different instance than $foo2->bar
      */
     public function testEquality(Demo\Basic $foo, Demo\Basic2 $foo2)
     {
