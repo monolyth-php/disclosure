@@ -13,7 +13,7 @@ class ReinjectTest
 {
     public function testReinject(Demo\Reinjectme $foo)
     {
-        Demo\Reinjectme::inject(function (&$bar) {
+        Demo\Reinjectme::register(function (&$bar) {
             $bar = new Demo\ArgsObject(2);
         });
         $foo2 = new Demo\Reinjectme;
