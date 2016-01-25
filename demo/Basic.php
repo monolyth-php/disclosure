@@ -6,13 +6,13 @@ use Disclosure\Injector;
 
 class Basic
 {
-    public $bar = null;
+    public $foo = null;
 
     use Injector;
 
     public function __construct()
     {
-        $this->inject(function (BasicInjection $bar) {});
+        $this->inject(function ($foo, $bar) {}, 'baz');
     }
 }
 
