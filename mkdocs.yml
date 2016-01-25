@@ -6,12 +6,8 @@ pages:
 - Introduction:
     - 'Quickstart': 'index.md'
 - Basic usage:
-    - 'Simple assignment': 'basic/simple.md'
-    - 'Advance declaration': 'basic/advance-declaration.md'
+    - 'The Container object': 'container.md'
+    - 'The Injector trait': 'injector.md'
 - Advanced topics:
-    - 'Using marker interfaces': 'advanced/marker-interfaces.md'
-    - '(Un)sharing dependencies': 'advanced/sharing.md'
-- API reference:
-    - 'Container': 'api/container.md'
-    - 'Injector': 'api/injector.md'
+    - 'Injecting constructor dependencies': 'constructor.md'
 
