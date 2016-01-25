@@ -3,10 +3,21 @@
 namespace Disclosure\Test;
 
 use Disclosure\Injector;
-use Disclosure\UnregisteredException;
+use Disclosure\NotFoundException;
 use Demo;
 use Gentry\Property;
 use Gentry\Group;
+use Disclosure\Container;
+
+$container = new Container;
+$container->register(function (&$foo, &$bar, &$baz) {
+    $foo = new Demo\BasicInjection1;
+    $bar = new Demo\BasicInjection2;
+    $baz = new Demo\BasicInjection3;
+});
+$container->register(function (&$fizz) {
+    $fizz = new Demo\DeepInjection;
+});
 
 /**
  * @Feature Injector should inject requested classes
@@ -14,50 +25,59 @@ use Gentry\Group;
 class InjectorTest
 {
     /**
-     * @Scenario {0}::$bar is a BasicInjection
+     * @Scenario {0}::$foo is a BasicInjection1
      */
-    public function bar(Demo\Basic $foo)
+    public function fooIsSet(Demo\Basic $foo)
     {
-        return function ($result) {
-            return $result instanceof Demo\BasicInjection;
+        return new Demo\BasicInjection1;
+    }
+
+    /**
+     * @Scenario {0}::$bar is a BasicInjection2
+     */
+    public function barIsSet(Demo\Basic $foo)
+    {
+        return new Demo\BasicInjection2;
+    }
+
+    /**
+     * @Scenario {0}::$baz is a BasicInjection3 injected via simple string
+     */
+    public function bazIsSet(Demo\Basic $foo)
+    {
+        return new Demo\BasicInjection3;
+    }
+
+    /**
+     * @Scenario {0}::inject should throw an exception if the dependency is unknown
+     */
+    public function unknown(Demo\Basic $foo, $baz = 'whatever')
+    {
+        throw new NotFoundException('baz');
+    }
+
+    /**
+     * @Scenario {0}::$bar is the same class and instance as $foo2->bar
+     *
+     */
+    public function testEquality(Demo\Basic $foo, Demo\Basic $foo2)
+    {
+        return function ($result) use ($foo2) {
+            return $result === $foo2->bar;
         };
     }
 
     /**
-     * @Scenario {0}::$bar gets injected through parent inheritance
+     * @Scenario {0}::resolve should instantiate a constructor-injected class
      */
-    public function parentInheritance(Demo\ChildInheritance $foo)
+    public function resolving(Demo\Resolve $foo = null)
     {
-        return new Demo\BasicInjection;
-    }
-
-    public function multiple(Demo\Multiple $test)
-    {
-        return new Group($this, $test, [
-            /**
-             * @Scenario {0}::$foo is an instance of BasicInjection
-             */
-            function () { return new Demo\BasicInjection; },
-            /**
-             * @Scenario {0}::$bar is an instance of BasicInjectionInherited
-             */
-            function () { return new Demo\BasicInjectionInherited; },
-            /**
-             * @Scenario {0}::$baz is an instance of ChildInheritance
-             */
-            function () { return new Demo\ChildInheritance; },
-        ]);
-    }
-
-    /**
-     * @Scenario {0}::$foobar is set when inject is called statically
-     */
-    public function statically(Demo\Basic &$foo = null)
-    {
-        Demo\Basic::register(function (Demo\BasicInjection $foobar) {});
-        $foo = new Demo\Basic;
-        $foo->inject(function ($foobar) {});
-        return new Demo\BasicInjection;
+        return function ($result) {
+            return $result->foo instanceof Demo\BasicInjection1
+                && $result->fuzz instanceof Demo\BasicInjection2
+                && $result->fizz instanceof Demo\DeepInjection
+                && $result->fizz->bar instanceof Demo\BasicInjection2;
+        };
     }
 }
 
