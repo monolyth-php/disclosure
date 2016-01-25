@@ -2,7 +2,7 @@
 
 namespace Demo;
 
-trait TraitDependency
+class BasicInjection3
 {
 }
 

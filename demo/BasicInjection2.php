@@ -2,7 +2,7 @@
 
 namespace Demo;
 
-interface Marker
+class BasicInjection2
 {
 }
 

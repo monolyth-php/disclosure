@@ -3,14 +3,15 @@
 namespace Demo;
 
 use Disclosure\Injector;
+use Disclosure\Injectable;
 
-class Reinjectme
+class DeepInjection implements Injectable
 {
     use Injector;
 
     public function __construct()
     {
-        $this->inject(function(ArgsObject $bar) { return true; });
+        $this->inject('bar');
     }
 }
 

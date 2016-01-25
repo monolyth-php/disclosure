@@ -4,11 +4,11 @@ namespace Demo;
 
 use Disclosure\Injector;
 
-class ChildInheritance extends ParentInheritance
+class Fails
 {
     public function __construct()
     {
-        $this->inject(function ($bar) {});
+        $this->inject('baz');
     }
 }
 
