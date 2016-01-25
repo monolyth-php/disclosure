@@ -1,145 +1,115 @@
 <?php
 
 namespace Disclosure;
+
+use Psr\Container\ContainerInterface;
+use Psr\Container\Exception\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionFunction;
 
-class Container
+/**
+ * Main container class for Disclosure. All instances share a global pool of
+ * registered dependencies.
+ */
+class Container implements ContainerInterface
 {
     private static $map = [];
+    private $delegate;
 
-    public static function inject($class, callable $inject)
+    /**
+     * Constructor. Optionally pass a delegate container to use. Note that
+     * delegates are tried before the default container. IF the delegate lookup
+     * fails, Disclosure will try the default before giving up.
+     *
+     * @param Psr\Container\ContainerInterface $delegate Optional delegate
+     *  container to use.
+     */
+    public function __construct(ContainerInterface $delegate = null)
+    {
+        if (isset($delegate)) {
+            $this->delegate = $delegate;
+        }
+    }
+
+    /**
+     * Resolve the dependency identified by $key.
+     *
+     * @param string $key The unique identifier for the dependency.
+     * @return mixed Whatever was stored under $key.
+     * @throws Disclosure\NotFoundException if no such $key was registered.
+     */
+    public function get($key)
+    {
+        if (!isset(static::$map[$key])) {
+            throw new NotFoundException($key);
+        }
+        if (static::$map[$key] instanceof ReflectionFunction) {
+            static::$map[$key] = static::$map[$key]->invoke($this);
+        }
+        return static::$map[$key];
+    }
+
+    /**
+     * Checks if a dependency exists identified by $key. Note that this also
+     * resolves the dependency internally, so any dependencies on $key must also
+     * be resolvable for this to return true.
+     *
+     * @param string $key The unique identifier for the dependency.
+     * @return bool True if $key identifies a known dependency, else false.
+     */
+    public function has($key)
+    {
+        try {
+            $this->get($key);
+            return true;
+        } catch (NotFoundExceptionInterface $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Register a group of dependencies defined in the callable. Each referenced
+     * argument should be assigned its designated value when invoked. Note that
+     * invocation takes place only when a dependency is retrieved.
+     *
+     * @param callable $inject A callable associating values with keys.
+     */
+    public function register(callable $inject)
     {
         $reflection = new ReflectionFunction($inject);
         $parameters = $reflection->getParameters();
-        $classes = [];
-        foreach ($parameters as $idx => $parameter) {
-            if ($requestedclass = $parameter->getClass()) {
-                $classes[$parameter->name] = $requestedclass->name;
-            } else {
-                $classes[$parameter->name] = true;
-            }
-        }
-        $injections = self::resolve($class, $classes);
-        foreach ($injections as $key => &$value) {
-            if (isset($classes[$key])) {
-                $classes[$key] =& $value;
-            }
-        }
-        $reinject = $reflection->invokeArgs($classes);
-        if ($reinject) {
-            foreach ($classes as &$value) {
-                $reflected = new ReflectionClass($value);
-                $constructor = $reflected->getConstructor();
-                if ($constructor) {
-                    $args = $constructor->getParameters();
-                    $makeNew = true;
-                    foreach ($args as $parameter) {
-                        if (!$parameter->isOptional()) {
-                            $makeNew = false;
-                            break;
-                        }
-                    }
-                } else {
-                    $makeNew = false;
-                }
-                if (!$makeNew) {
-                    $value = clone $value;
-                } else {
-                    $value = $reflected->newInstance();
-                }
-            }
-        }
-        self::resolve($class, $classes);
-        return $classes;
-    }
-    
-    private static function resolve($class, array $injects)
-    {
-        $tree = ['*' => '*'];
-        if ($class != '*') {
-            $tree += [$class => $class] + class_parents($class);
-        }
-        if (!isset(self::$map[$class])) {
-            self::$map[$class] = [];
-        }
-        foreach ($injects as $name => &$cname) {
-            if (!is_scalar($cname)) {
-                self::$map[$class][$name] = $cname;
-                continue;
-            }
-            if (is_bool($cname) && self::resolveByName($name, $cname, $tree)) {
-                continue;
-            }
-            foreach (self::$map[$class] as $key => $resolved) {
-                if (!class_exists($cname) || $resolved instanceof $cname) {
-                    $cname = $resolved;
-                    continue 2;
-                }
-            }
-            if (!is_bool($cname)) {
-                if (!isset(self::$map[$class][$name])) {
-                    self::$map[$class][$name] = $cname;
-                } elseif (!is_string(self::$map[$class][$name])
-                    && get_class(self::$map[$class][$name]) == $cname
-                ) {
-                    $cname = self::$map[$class][$name];
-                }
-            }
-            if (self::resolveByParents($cname, $tree)) {
-                continue;
-            }
-            if ($class != '*') {
-                if (self::resolveByParents($cname, class_implements($class))) {
-                    continue;
-                }
-                if (self::resolveByParents($cname, class_uses($class))) {
-                    continue;
-                }
-            }
-            if (is_string($cname) && class_exists($cname)) {
-                $cname = new $cname;
-                self::$map[$class][$name] = $cname;
-            } elseif (!is_scalar($cname)) {
-                self::$map[$class][$name] = $cname;
-            }
-        }
-        return $injects;
-    }
-
-    private static function resolveByParents(&$class, array $parents)
-    {
-        foreach ($parents as $parent) {
-            if (isset(self::$map[$parent])) {
-                foreach (self::$map[$parent] as $previous) {
-                    if (!is_string($previous)
-                        && !is_object($class)
-                        && is_object($previous)
-                        && get_class($previous) == $class
-                    ) {
-                        $class = $previous;
-                        return true;
+        foreach ($parameters as $parameter) {
+            $key = $parameter->name;
+            $getter = function ($c) use ($reflection, $parameters, $key) {
+                if (isset($c->delegate)) {
+                    try {
+                        return $c->delegate->get($key);
+                    } catch (NotFoundExceptionInterface $e) {
+                        // That's fine, we'll try our own container next.
                     }
                 }
-            }
-            if ($parent != '*'
-                && self::resolveByParents($class, class_implements($parent))
-            ) {
-                return true;
-            }
+                $args = [];
+                foreach ($parameters as $param) {
+                    if (!$param->isPassedByReference()) {
+                        $args[] = $c->get($param->name);
+                    } else {
+                        ${$param->name} = null;
+                        $args[$param->name] =& ${$param->name};
+                    }
+                }
+                $reflection->invokeArgs($args);
+                foreach ($args as $found => $value) {
+                    if (!is_numeric($found) && $found != $key) {
+                        $c::$map[$found] = $value;
+                    }
+                }
+                if (isset($args[$key])) {
+                    return $args[$key];
+                }
+                throw new NotFoundException($key);
+            };
+            static::$map[$key] = new ReflectionFunction($getter);
         }
-        return false;
-    }
-
-    private static function resolveByName($name, &$class, array $classes)
-    {
-        foreach ($classes as $parent) {
-            if (isset(self::$map[$parent][$name])) {
-                $class = self::$map[$parent][$name];
-                return true;
-            }
-        }
-        return false;
     }
 }
 
