@@ -20,63 +20,67 @@ $container->register(function (&$fizz) {
 });
 
 /**
- * @Feature Injector should inject requested classes
+ * Injector should inject requested classes
  */
 class InjectorTest
 {
     /**
-     * @Scenario {0}::$foo is a BasicInjection1
+     * {0}::$foo is a BasicInjection1
      */
     public function fooIsSet(Demo\Basic $foo)
     {
-        return new Demo\BasicInjection1;
+        yield new Demo\BasicInjection1;
     }
 
     /**
-     * @Scenario {0}::$bar is a BasicInjection2
+     * {0}::$bar is a BasicInjection2
      */
     public function barIsSet(Demo\Basic $foo)
     {
-        return new Demo\BasicInjection2;
+        yield new Demo\BasicInjection2;
     }
 
     /**
-     * @Scenario {0}::$baz is a BasicInjection3 injected via simple string
+     * {0}::$baz is a BasicInjection3 injected via simple string
      */
     public function bazIsSet(Demo\Basic $foo)
     {
-        return new Demo\BasicInjection3;
+        yield new Demo\BasicInjection3;
     }
 
     /**
-     * @Scenario {0}::inject should throw an exception if the dependency is unknown
+     * {0}::inject should throw an exception if the dependency is unknown
      */
     public function unknown(Demo\Basic $foo, $baz = 'whatever')
     {
-        throw new NotFoundException('baz');
+        yield new NotFoundException('baz');
     }
 
     /**
-     * @Scenario {0}::$bar is the same class and instance as $foo2->bar
+     * {0}::$bar is the same class and instance as $foo2->bar
      *
      */
     public function testEquality(Demo\Basic $foo, Demo\Basic $foo2)
     {
-        return function ($result) use ($foo2) {
+        yield function ($result) use ($foo2) {
             return $result === $foo2->bar;
         };
     }
 
     /**
-     * @Scenario {0}::resolve should instantiate a constructor-injected class
+     * {0}::resolve should instantiate a constructor-injected class, so that
+     * {0}::$foo, {0}::$fuzz and {0}::$fizz and {0}::$fizz->bar are all of the
+     * correct class.
      */
-    public function resolving(Demo\Resolve $foo = null)
+    public function resolving(Demo\Resolve &$foo = null)
     {
-        return function ($result) {
-            return $result->foo instanceof Demo\BasicInjection1
-                && $result->fuzz instanceof Demo\BasicInjection2
-                && $result->fizz instanceof Demo\DeepInjection
-                && $result->fizz->bar instanceof Demo\BasicInjection2;
+        yield 'is_a' => 'Demo\Resolve';
+        $foo = Demo\Resolve::resolve();
+        yield 'is_a' => 'Demo\BasicInjection1';
+        yield 'is_a' => 'Demo\BasicInjection2';
+        yield 'is_a' => 'Demo\DeepInjection';
+        yield function ($result) {
+            return $result->bar instanceof Demo\BasicInjection2;
         };
     }
 }
