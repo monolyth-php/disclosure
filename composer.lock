@@ -4,22 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "092b40ea4eb5f783cc393f3b1bf3952a",
-    "content-hash": "8ad802a3087102f924c6b3cc62cee493",
+    "hash": "81eab9a4dd19b51945985f10e7ff809c",
+    "content-hash": "13469362e50c63aa67ef5f0f20ade6a4",
     "packages": [],
     "packages-dev": [
         {
             "name": "monomelodies/gentry",
-            "version": "0.3.9",
+            "version": "0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/monomelodies/gentry.git",
-                "reference": "7e49aafd63698f3bb9fae8ecdaeacb595ccc9144"
+                "reference": "2b99f7f8638d2fe11657a64d9e39d1aeaf86f7a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/monomelodies/gentry/zipball/7e49aafd63698f3bb9fae8ecdaeacb595ccc9144",
-                "reference": "7e49aafd63698f3bb9fae8ecdaeacb595ccc9144",
+                "url": "https://api.github.com/repos/monomelodies/gentry/zipball/2b99f7f8638d2fe11657a64d9e39d1aeaf86f7a1",
+                "reference": "2b99f7f8638d2fe11657a64d9e39d1aeaf86f7a1",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 }
             ],
             "description": "PHP unit test generation tools",
-            "time": "2016-01-25 12:02:56"
+            "time": "2016-01-30 11:39:08"
         },
         {
             "name": "monomelodies/kingconf",
