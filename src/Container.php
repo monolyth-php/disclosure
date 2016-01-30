@@ -99,7 +99,7 @@ class Container implements ContainerInterface
                 }
                 $reflection->invokeArgs($args);
                 foreach ($args as $found => $value) {
-                    if (!is_numeric($found) && $found != $key) {
+                    if (!is_numeric($found) && $found == $key) {
                         $c::$map[$found] = $value;
                     }
                 }
