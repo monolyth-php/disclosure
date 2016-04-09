@@ -80,7 +80,7 @@ class Container implements ContainerInterface
         $parameters = $reflection->getParameters();
         foreach ($parameters as $parameter) {
             $key = $parameter->name;
-            $getter = function ($c) use ($reflection, $parameters, $key) {
+            $getter = function (Container $c) use ($reflection, $parameters, $key) {
                 if (isset($c->delegate)) {
                     try {
                         return $c->delegate->get($key);
