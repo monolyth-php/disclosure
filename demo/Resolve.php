@@ -2,8 +2,8 @@
 
 namespace Monolyth\Disclosure\Demo;
 
-use Disclosure\Injector;
-use Disclosure\Injectable;
+use Monolyth\Disclosure\Injector;
+use Monolyth\Disclosure\Injectable;
 
 class Resolve implements Injectable
 {

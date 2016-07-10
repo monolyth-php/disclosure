@@ -2,7 +2,7 @@
 
 namespace Monolyth\Disclosure\Demo;
 
-use Disclosure\Injector;
+use Monolyth\Disclosure\Injector;
 
 class Fails
 {
