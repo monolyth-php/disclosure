@@ -1,13 +1,13 @@
 <?php
 
-namespace Disclosure\Test;
+namespace Monolyth\Disclosure\Test;
 
-use Disclosure\Injector;
-use Disclosure\NotFoundException;
-use Demo;
+use Monolyth\Disclosure\Injector;
+use Monolyth\Disclosure\NotFoundException;
+use Monolyth\Disclosure\Demo;
 use Gentry\Property;
 use Gentry\Group;
-use Disclosure\Container;
+use Monolyth\Disclosure\Container;
 
 $container = new Container;
 $container->register(function (&$foo, &$bar, &$baz) {
