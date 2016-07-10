@@ -6,7 +6,7 @@ and simpler (we think).
 
 As of version 2.0, Disclosure is fully compatible with the (upcoming) PSR
 recommendation for Container objects. A copy of the as-yet unrealeased
-`PSR\Container` interface is included in the package (until they finally
+`Psr\Container` interface is included in the package (until they finally
 realease it...).
 
 ## Installation
