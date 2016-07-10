@@ -12,7 +12,7 @@ of the same names on your object:
 ```php
 <?php
 
-use Disclosure\Injector;
+use Monolyth\Disclosure\Injector;
 
 class Foo
 {

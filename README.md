@@ -13,13 +13,13 @@ realease it...).
 
 ### Composer (recommended)
 ```sh
-composer require monomelodies/disclosure
+composer require monolyth/disclosure
 ```
 
 ### Manual installation
 1. Get or clonse the code;
-2. Register `/path/to/disclosure/src` for the namespace `Disclosure\\` in your
-   PSR-4 autoloader;
+2. Register `/path/to/disclosure/src` for the namespace `Monolyth\\Disclosure\\`
+   in your PSR-4 autoloader;
 3. Register `/path/to/disclosure/psr` for the namespace `Psr\\Container\\` in
    your PSR-4 autoloader
 
@@ -31,7 +31,7 @@ fine to do it alongside your class definitions.
 ```php
 <?php
 
-use Disclosre\Container;
+use Monolyth\Disclosure\Container;
 
 $container = new Container;
 $container->register(function (&$foo, &$bar) {
@@ -49,7 +49,7 @@ by the `Injector` trait:
 ```php
 <?php
 
-use Disclosure\Injector;
+use Monolyth\Disclosure\Injector;
 
 class MyClass
 {

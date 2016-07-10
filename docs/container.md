@@ -1,15 +1,16 @@
 # The Container object
-The `Disclosure\Container` class is fully compatible with
+The `Monolyth\Disclosure\Container` class is fully compatible with
 `Psr\Container\ContainerInterface`.
 
 ## Creating a container
-Just instance an object of class `Disclosure\Container`. You can do this as many
-times as you like, all instances share the same "pool" of dependencies.
+Just instance an object of class `Monolyth\Disclosure\Container`. You can do
+this as many times as you like, all instances share the same "pool" of
+dependencies.
 
 ```php
 <?php
 
-use Disclosure\Container;
+use Monolyth\Disclosure\Container;
 
 $container = new Container;
 $container->register(function (&$foo) {
@@ -54,13 +55,13 @@ var_dump(get_class($container->get('foo'))); // "Foo"
 
 If no dependency by that name was found, an instance of
 `Psr\Container\Exception\NotFoundExceptionInterface` is thrown as implemented by
-`Disclosure\NotFoundException`.
+`Monolyth\Disclosure\NotFoundException`.
 
 ## Using a delegate container
 Pass an instance of `Psr\Container\ContainerInterface` as a constructor
 argument to the container to use a _delegate container_ instead. If an
-_instance_ of `Disclosure\Container` has a delegate container, it will attempt
-to resolve all dependencies on that container instead.
+_instance_ of `Monolyth\Disclosure\Container` has a delegate container, it will
+attempt to resolve all dependencies on that container instead.
 
 Delegate containers are per-instance, but Disclosure is smart enough to remember
 which keys were stored on containers with a delegate.
@@ -75,13 +76,13 @@ An example:
 ```php
 <?php
 
-$container = new Disclosure\Container(new MyHomebrewContainer);
+$container = new Monolyth\Disclosure\Container(new MyHomebrewContainer);
 $container->register(function (&$foo, &$bar) {
     $foo = new Foo;
     $bar = new Bar;
 });
-$container2 = new Disclosure\Container;
-$conteiner2->register(function (&$bar) {
+$container2 = new Monolyth\Disclosure\Container;
+$container2->register(function (&$bar) {
     $bar = new Baz;
 });
 ```
@@ -91,8 +92,8 @@ $conteiner2->register(function (&$bar) {
 ```php
 <?php
 
-$container = new Disclosure\Container;
-$foo = $container->get('foo'); // Success! $foo retrieved from HomeBrewContainer
+$container = new Monolyth\Disclosure\Container;
+$foo = $container->get('foa'); // Success! $foo retrieved from HomeBrewContainer
 $container->get('bar') instanceof 'Bar'; // False: it's now a Baz
 ```
 
@@ -113,7 +114,7 @@ match as is convenient for your application logic.
 ```php
 <?php
 
-$container = new Disclosure\Container;
+$container = new Monolyth\Disclosure\Container;
 $container->inject(function ($foo, &$bar) {
     $bar = new Bar($foo);
 });

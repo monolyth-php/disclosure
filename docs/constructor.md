@@ -16,7 +16,7 @@ $container->register(function (&$bar) {
 
 class Foo
 {
-    use Disclosure\Injector;
+    use Monolyth\Disclosure\Injector;
 
     public function __construct($bar)
     {
@@ -41,7 +41,7 @@ calls `resolve` too on injected dependencies.
 
 class Foo
 {
-    use Disclosure\Injector;
+    use Monolyth\Disclosure\Injector;
 
     public function __construct(Bar $bar)
     {
@@ -58,9 +58,9 @@ Now, assuming `Bar` was declared as follows:
 ```php
 <?php
 
-class Bar implements Disclosure\Injectable
+class Bar implements Monolyth\Disclosure\Injectable
 {
-    use Disclosure\Injector;
+    use Monolyth\Disclosure\Injector;
 
     public function __construct(Baz $baz)
     {
@@ -76,3 +76,4 @@ class Bar implements Disclosure\Injectable
 $foo = Foo::resolve();
 var_dump(get_class($foo->bar->baz)); // "Baz"
 ```
+
