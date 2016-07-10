@@ -1,6 +1,6 @@
 <?php
 
-namespace Disclosure;
+namespace Monolyth\Disclosure;
 
 use Psr\Container\ContainerInterface;
 use Psr\Container\Exception\NotFoundExceptionInterface;

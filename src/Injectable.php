@@ -1,6 +1,6 @@
 <?php
 
-namespace Disclosure;
+namespace Monolyth\Disclosure;
 
 /**
  * Interface resolvable classes must implement. This allows the static `resolve`

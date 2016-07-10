@@ -1,6 +1,6 @@
 <?php
 
-namespace Disclosure;
+namespace Monolyth\Disclosure;
 
 use InvalidArgumentException;
 

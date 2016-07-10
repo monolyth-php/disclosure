@@ -1,6 +1,6 @@
 <?php
 
-namespace Disclosure;
+namespace Monolyth\Disclosure;
 
 use Psr\Container\Exception\NotFoundExceptionInterface;
 use DomainException;
