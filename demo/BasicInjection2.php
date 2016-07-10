@@ -1,6 +1,6 @@
 <?php
 
-namespace Demo;
+namespace Monolyth\Disclosure\Demo;
 
 class BasicInjection2
 {
