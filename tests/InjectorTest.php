@@ -25,63 +25,60 @@ $container->register(function (&$fizz) {
 class InjectorTest
 {
     /**
-     * {0}::$foo is a BasicInjection1
+     * Basic::$foo is a BasicInjection1
      */
     public function fooIsSet(Demo\Basic $foo)
     {
-        yield new Demo\BasicInjection1;
+        yield assert($foo->foo instanceof Demo\BasicInjection1);
     }
 
     /**
-     * {0}::$bar is a BasicInjection2
+     * Basic::$bar is a BasicInjection2
      */
     public function barIsSet(Demo\Basic $foo)
     {
-        yield new Demo\BasicInjection2;
+        yield assert($foo->bar instanceof Demo\BasicInjection2);
     }
 
     /**
-     * {0}::$baz is a BasicInjection3 injected via simple string
+     * Basic::$baz is a BasicInjection3 injected via simple string
      */
     public function bazIsSet(Demo\Basic $foo)
     {
-        yield new Demo\BasicInjection3;
+        yield assert($foo->baz instanceof Demo\BasicInjection3);
     }
 
     /**
-     * {0}::inject should throw an exception if the dependency is unknown
+     * inject should throw an exception if the dependency is unknown
      */
-    public function unknown(Demo\Basic $foo, $baz = 'whatever')
+    public function unknown(Demo\Basic $foo)
     {
-        yield new NotFoundException('baz');
+        $foo->inject('whatever');
+        throw new NotFoundException('baz');
     }
 
     /**
-     * {0}::$bar is the same class and instance as $foo2->bar
+     * $foo->bar is the same class and instance as $foo2->bar
      *
      */
     public function testEquality(Demo\Basic $foo, Demo\Basic $foo2)
     {
-        yield function ($result) use ($foo2) {
-            return $result === $foo2->bar;
-        };
+        yield assert($foo->bar === $foo2->bar);
     }
 
     /**
-     * {0}::resolve should instantiate a constructor-injected class, so that
-     * {0}::$foo, {0}::$fuzz and {0}::$fizz and {0}::$fizz->bar are all of the
+     * resolve should instantiate a constructor-injected class, so that
+     * $foo->foo, $foo->fuzz and $foo->fizz and $foo->fizz->bar are all of the
      * correct class.
      */
     public function resolving(Demo\Resolve &$foo = null)
     {
-        yield 'is_a' => 'Demo\Resolve';
+        yield assert($foo instanceof Demo\Resolve);
         $foo = Demo\Resolve::resolve();
-        yield 'is_a' => 'Demo\BasicInjection1';
-        yield 'is_a' => 'Demo\BasicInjection2';
-        yield 'is_a' => 'Demo\DeepInjection';
-        yield function ($result) {
-            return $result->bar instanceof Demo\BasicInjection2;
-        };
+        yield assert($foo->foo instanceof Demo\BasicInjection1);
+        yield assert($foo->fuzz instanceof Demo\BasicInjection2);
+        yield assert($foo->fizz instanceof Demo\DeepInjection);
+        yield assert($foo->fizz->bar instanceof Demo\BasicInjection2);
     }
 }
 
