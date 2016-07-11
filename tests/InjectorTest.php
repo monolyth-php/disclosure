@@ -53,8 +53,12 @@ class InjectorTest
      */
     public function unknown(Demo\Basic $foo)
     {
-        $foo->inject('whatever');
-        throw new NotFoundException('baz');
+        $e = null;
+        try {
+            $foo->inject('whatever');
+        } catch (NotFoundException $e) {
+        }
+        yield assert($e instanceof NotFoundException);
     }
 
     /**
