@@ -4,22 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6d96d53150cd58f39186c4a5c236642b",
-    "content-hash": "8dc1fe2271b3c9558d5c44b90a7e9dc3",
+    "hash": "af14e6082e04266a50f3b8887840d17b",
+    "content-hash": "02a7c0c63d603fa2dad13c500837378f",
     "packages": [],
     "packages-dev": [
         {
             "name": "gentry/gentry",
-            "version": "0.10.0",
+            "version": "0.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gentry-php/gentry.git",
-                "reference": "557ead421bf1608463c58b98730bf5cf9d486b98"
+                "reference": "a5e3c6e4739466dce3230191221cf4734b022d7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gentry-php/gentry/zipball/557ead421bf1608463c58b98730bf5cf9d486b98",
-                "reference": "557ead421bf1608463c58b98730bf5cf9d486b98",
+                "url": "https://api.github.com/repos/gentry-php/gentry/zipball/a5e3c6e4739466dce3230191221cf4734b022d7e",
+                "reference": "a5e3c6e4739466dce3230191221cf4734b022d7e",
                 "shasum": ""
             },
             "require": {
@@ -48,7 +48,7 @@
                 }
             ],
             "description": "PHP unit test generation tools",
-            "time": "2016-07-11 09:39:24"
+            "time": "2016-07-11 11:06:27"
         },
         {
             "name": "monomelodies/kingconf",

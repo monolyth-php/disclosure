@@ -13,7 +13,7 @@
         "php": ">=5.4"
     },
     "require-dev": {
-        "gentry/gentry": "^0.10.0"
+        "gentry/gentry": "^0.10.1"
     },
     "autoload": {
         "psr-4": {
