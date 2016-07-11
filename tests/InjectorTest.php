@@ -65,8 +65,9 @@ class InjectorTest
      * $foo->bar is the same class and instance as $foo2->bar
      *
      */
-    public function testEquality(Demo\Basic $foo, Demo\Basic $foo2)
+    public function testEquality(Demo\Basic $foo)
     {
+        $foo2 = Demo\Basic::resolve();
         yield assert($foo->bar === $foo2->bar);
     }
 
