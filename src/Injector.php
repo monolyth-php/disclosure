@@ -76,7 +76,9 @@ trait Injector
                         throw new TypeMismatchException(get_class($inject));
                     }
                 }
-                if ($class->implementsInterface('Disclosure\Injectable')) {
+                if ($class->implementsInterface(
+                    'Monolyth\Disclosure\Injectable'
+                )) {
                     $args[] = $class::resolve();
                 } else {
                     $args[] = $class->newInstance();
