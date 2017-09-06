@@ -40,7 +40,7 @@ class Container implements ContainerInterface
      */
     public function get($key)
     {
-        if (!isset(static::$map[$key])) {
+        if (!array_key_exists($key, static::$map)) {
             throw new NotFoundException($key);
         }
         if (static::$map[$key] instanceof ReflectionFunction) {
@@ -103,7 +103,7 @@ class Container implements ContainerInterface
                         $c::$map[$found] = $value;
                     }
                 }
-                if (isset($args[$key])) {
+                if (array_key_exists($key, $args)) {
                     return $args[$key];
                 }
                 throw new NotFoundException($key);
