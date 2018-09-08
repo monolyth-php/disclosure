@@ -38,7 +38,7 @@ class Container implements ContainerInterface
      * @return mixed Whatever was stored under $key.
      * @throws Disclosure\NotFoundException if no such $key was registered.
      */
-    public function get($key)
+    public function get(string $key)
     {
         if (!array_key_exists($key, static::$map)) {
             throw new NotFoundException($key);
@@ -57,7 +57,7 @@ class Container implements ContainerInterface
      * @param string $key The unique identifier for the dependency.
      * @return bool True if $key identifies a known dependency, else false.
      */
-    public function has($key)
+    public function has(string $key) : bool
     {
         try {
             $this->get($key);
@@ -73,8 +73,9 @@ class Container implements ContainerInterface
      * invocation takes place only when a dependency is retrieved.
      *
      * @param callable $inject A callable associating values with keys.
+     * @return void
      */
-    public function register(callable $inject)
+    public function register(callable $inject) : void
     {
         $reflection = new ReflectionFunction($inject);
         $parameters = $reflection->getParameters();
