@@ -8,6 +8,6 @@ namespace Monolyth\Disclosure;
  */
 interface Injectable
 {
-    public function inject($inject);
+    public static function resolve() : object;
 }
 
