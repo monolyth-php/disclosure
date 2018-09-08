@@ -32,13 +32,14 @@ class Container implements ContainerInterface
     }
 
     /**
-     * Resolve the dependency identified by $key.
+     * Resolve the dependency identified by `$key`. Note `$key` is not type
+     * hinted as it would violate the `Psr\Container\ContainerInterface`.
      *
      * @param string $key The unique identifier for the dependency.
      * @return mixed Whatever was stored under $key.
      * @throws Disclosure\NotFoundException if no such $key was registered.
      */
-    public function get(string $key)
+    public function get($key)
     {
         if (!array_key_exists($key, static::$map)) {
             throw new NotFoundException($key);
@@ -54,10 +55,13 @@ class Container implements ContainerInterface
      * resolves the dependency internally, so any dependencies on $key must also
      * be resolvable for this to return true.
      *
+     * Note `$key` is not type hinted as it would violate the
+     * `Psr\Container\ContainerInterface`.
+     *
      * @param string $key The unique identifier for the dependency.
      * @return bool True if $key identifies a known dependency, else false.
      */
-    public function has(string $key) : bool
+    public function has($key) : bool
     {
         try {
             $this->get($key);
