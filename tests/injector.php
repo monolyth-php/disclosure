@@ -52,8 +52,6 @@ return function () : Generator {
 
     /** resolve should instantiate a constructor-injected class, so that $foo->foo, $foo->fuzz and $foo->fizz and $foo->fizz->bar are all of the correct class. */
     yield function () {
-        $foo = new Demo\Resolve;
-        assert($foo instanceof Demo\Resolve);
         $foo = Demo\Resolve::resolve();
         assert($foo->foo instanceof Demo\BasicInjection1);
         assert($foo->fuzz instanceof Demo\BasicInjection2);
