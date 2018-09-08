@@ -17,10 +17,11 @@ trait Injector
      * where each argument defines that name.
      *
      * @param string|callable... $inject What to inject.
+     * @return void
      * @throws Psr\Container\Exception\NotFoundExceptionInterface if _any_ of
      *  the requested dependencies could not be resolved.
      */
-    public function inject($inject)
+    public function inject($inject) : void
     {
         $container = new Container;
         $requested = [];
@@ -46,14 +47,14 @@ trait Injector
      * Type-hinted arguments _must_ match a dependency. If no dependency exists,
      * a new instance will be passed.
      *
-     * @return mixed An object of the same class as called on, with dependencies
+     * @return object An object of the same class as called on, with dependencies
      *  injected through its constructor.
      * @throws Disclosure\TypeMismatchException if the retrieved dependency does
      *  not satisfy the argument's type hint.
      * @throws Psr\Container\Exception\NotFoundExceptionInterface if _any_ of
      *  the requested dependencies could not be resolved.
      */
-    public static function resolve()
+    public static function resolve() : object
     {
         $reflection = new ReflectionClass(__CLASS__);
         $constructor = $reflection->getConstructor();
