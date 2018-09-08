@@ -1,12 +1,8 @@
 <?php
 
-namespace Monolyth\Disclosure\Test;
-
 use Monolyth\Disclosure\Injector;
 use Monolyth\Disclosure\NotFoundException;
 use Monolyth\Disclosure\Demo;
-use Gentry\Property;
-use Gentry\Group;
 use Monolyth\Disclosure\Container;
 
 $container = new Container;
@@ -19,71 +15,50 @@ $container->register(function (&$fizz) {
     $fizz = new Demo\DeepInjection;
 });
 
-/**
- * Injector should inject requested classes
- */
-class InjectorTest
-{
-    /**
-     * Basic::$foo is a BasicInjection1
-     */
-    public function fooIsSet(Demo\Basic $foo)
-    {
-        yield assert($foo->foo instanceof Demo\BasicInjection1);
-    }
+/** Injector should inject requested classes */
+return function () : Generator {
+    $foo = new Demo\Basic;
 
-    /**
-     * Basic::$bar is a BasicInjection2
-     */
-    public function barIsSet(Demo\Basic $foo)
-    {
-        yield assert($foo->bar instanceof Demo\BasicInjection2);
-    }
+    /** Basic::$foo is a BasicInjection1 */
+    yield function () use ($foo) {
+        assert($foo->foo instanceof Demo\BasicInjection1);
+    };
 
-    /**
-     * Basic::$baz is a BasicInjection3 injected via simple string
-     */
-    public function bazIsSet(Demo\Basic $foo)
-    {
-        yield assert($foo->baz instanceof Demo\BasicInjection3);
-    }
+    /** Basic::$bar is a BasicInjection2 */
+    yield function () use ($foo) {
+        assert($foo->bar instanceof Demo\BasicInjection2);
+    };
 
-    /**
-     * inject should throw an exception if the dependency is unknown
-     */
-    public function unknown(Demo\Basic $foo)
-    {
+    /** Basic::$baz is a BasicInjection3 injected via simple string */
+    yield function () use ($foo) {
+        assert($foo->baz instanceof Demo\BasicInjection3);
+    };
+
+    /** inject should throw an exception if the dependency is unknown */
+    yield function () use ($foo) {
         $e = null;
         try {
             $foo->inject('whatever');
         } catch (NotFoundException $e) {
         }
-        yield assert($e instanceof NotFoundException);
-    }
+        assert($e instanceof NotFoundException);
+    };
 
-    /**
-     * $foo->bar is the same class and instance as $foo2->bar
-     *
-     */
-    public function testEquality(Demo\Basic $foo)
-    {
+    /** $foo->bar is the same class and instance as $foo2->bar */
+    yield function () use ($foo) {
         $foo2 = Demo\Basic::resolve();
-        yield assert($foo->bar === $foo2->bar);
-    }
+        assert($foo->bar === $foo2->bar);
+    };
 
-    /**
-     * resolve should instantiate a constructor-injected class, so that
-     * $foo->foo, $foo->fuzz and $foo->fizz and $foo->fizz->bar are all of the
-     * correct class.
-     */
-    public function resolving(Demo\Resolve &$foo = null)
-    {
-        yield assert($foo instanceof Demo\Resolve);
+    /** resolve should instantiate a constructor-injected class, so that $foo->foo, $foo->fuzz and $foo->fizz and $foo->fizz->bar are all of the correct class. */
+    yield function () {
+        $foo = new Demo\Resolve;
+        assert($foo instanceof Demo\Resolve);
         $foo = Demo\Resolve::resolve();
-        yield assert($foo->foo instanceof Demo\BasicInjection1);
-        yield assert($foo->fuzz instanceof Demo\BasicInjection2);
-        yield assert($foo->fizz instanceof Demo\DeepInjection);
-        yield assert($foo->fizz->bar instanceof Demo\BasicInjection2);
-    }
-}
+        assert($foo->foo instanceof Demo\BasicInjection1);
+        assert($foo->fuzz instanceof Demo\BasicInjection2);
+        assert($foo->fizz instanceof Demo\DeepInjection);
+        assert($foo->fizz->bar instanceof Demo\BasicInjection2);
+    };
+};
 
