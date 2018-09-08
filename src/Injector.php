@@ -16,16 +16,16 @@ trait Injector
      * either a string containing the name of the dependency, or a callable
      * where each argument defines that name.
      *
-     * @param string|callable... $inject What to inject.
+     * @param string|callable ...$injects What to inject.
      * @return void
      * @throws Psr\Container\Exception\NotFoundExceptionInterface if _any_ of
      *  the requested dependencies could not be resolved.
      */
-    public function inject($inject) : void
+    public function inject(...$injects) : void
     {
         $container = new Container;
         $requested = [];
-        foreach (func_get_args() as $inject) {
+        foreach ($injects as $inject) {
             if (is_string($inject)) {
                 $requested[] = $inject;
             } elseif (is_callable($inject)) {
