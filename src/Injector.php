@@ -4,7 +4,7 @@ namespace Monolyth\Disclosure;
 
 use ReflectionFunction;
 use ReflectionClass;
-use Psr\Container\Exception\NotFoundExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Injector trait classes with dependencies can "use".
@@ -18,8 +18,9 @@ trait Injector
      *
      * @param string|callable ...$injects What to inject.
      * @return void
-     * @throws Psr\Container\Exception\NotFoundExceptionInterface if _any_ of
-     *  the requested dependencies could not be resolved.
+     * @throws Psr\Container\NotFoundExceptionInterface if _any_ of the
+     *  requested dependencies could not be resolved.
+     * @see Monolyth\Disclosure\Container::get
      */
     public function inject(...$injects) : void
     {
@@ -51,8 +52,9 @@ trait Injector
      *  injected through its constructor.
      * @throws Disclosure\TypeMismatchException if the retrieved dependency does
      *  not satisfy the argument's type hint.
-     * @throws Psr\Container\Exception\NotFoundExceptionInterface if _any_ of
-     *  the requested dependencies could not be resolved.
+     * @throws Psr\Container\NotFoundExceptionInterface if _any_ of the
+     *  requested dependencies could not be resolved.
+     * @see Monolyth\Disclosure\Container::get
      */
     public static function resolve() : object
     {
