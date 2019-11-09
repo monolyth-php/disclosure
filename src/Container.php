@@ -3,7 +3,7 @@
 namespace Monolyth\Disclosure;
 
 use Psr\Container\ContainerInterface;
-use Psr\Container\Exception\NotFoundExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionFunction;
 
