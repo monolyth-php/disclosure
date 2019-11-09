@@ -18,14 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Monolyth\\Disclosure\\": "src",
-            "Psr\\Container\\": "psr"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Monolyth\\Disclosure\\Test\\": "tests",
-            "Monolyth\\Disclosure\\Demo\\": "demo"
+            "Monolyth\\Disclosure\\": "src"
         }
     }
 }
