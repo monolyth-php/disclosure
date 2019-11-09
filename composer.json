@@ -20,5 +20,10 @@
         "psr-4": {
             "Monolyth\\Disclosure\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Monolyth\\Disclosure\\Demo\\": "demo"
+        }
     }
 }
