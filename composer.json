@@ -11,7 +11,8 @@
     ],
     "require": {
         "php": ">=7.3",
-        "toast/unit": "^2.0"
+        "toast/unit": "^2.0",
+        "psr/container": "^1.0"
     },
     "require-dev": {
         "gentry/gentry": "^0.13.3"
