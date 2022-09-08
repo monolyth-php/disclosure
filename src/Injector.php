@@ -69,8 +69,9 @@ trait Injector
                 $inject = $container->get($name);
             } catch (NotFoundExceptionInterface $e) {
             }
-            if ($class = $parameter->getClass()) {
-                $instance = $class->getName();
+            if ($type = $parameter->getType()) {
+                $instance = $type->__toString();
+                $class = new ReflectionClass($instance);
                 if (isset($inject)) {
                     if ($inject instanceof $instance) {
                         $args[] = $inject;
@@ -79,9 +80,7 @@ trait Injector
                         throw new TypeMismatchException(get_class($inject));
                     }
                 }
-                if ($class->implementsInterface(
-                    'Monolyth\Disclosure\Injectable'
-                )) {
+                if ($class->implementsInterface(Injectable::class)) {
                     $args[] = $class::resolve();
                 } else {
                     $args[] = $class->newInstance();
