@@ -1,9 +1,6 @@
 <?php
 
-use Monolyth\Disclosure\Injector;
-use Monolyth\Disclosure\NotFoundException;
-use Monolyth\Disclosure\Demo;
-use Monolyth\Disclosure\Container;
+use Monolyth\Disclosure\{ Injector, NotFoundException, Container};
 
 $container = new Container;
 $container->register(function (&$foo, &$bar, &$baz) {
