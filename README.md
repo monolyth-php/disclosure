@@ -1,13 +1,8 @@
 # Disclosure
-PHP5 dependency injection and service locator framework.
+PHP8 dependency injection and service locator framework.
 Most existing DI or Inversion of Control (IoC) solutions depend on extensive
 configuration files to define dependencies. This sucks; Disclosure is better
 and simpler (we think).
-
-As of version 2.0, Disclosure is fully compatible with the (upcoming) PSR
-recommendation for Container objects. A copy of the as-yet unrealeased
-`Psr\Container` interface is included in the package (until they finally
-realease it...).
 
 ## Installation
 
@@ -89,4 +84,51 @@ all over the place, but the main ones are:
 No, in the above example it doesn't add much, but see the complete documentation
 for real-world, practical examples of why dependency injection is generally a
 good idea.
+
+## Injection using attributes
+As of version 2.2, it is also possible to specify dependencies in PHP8
+_attributes_. This is done by specifying the `Monolyth\Disclosure\Inject`
+attribute on the _class_, with the required key as an argument.
+
+> Alternatively, both when calling `inject` or adding an `Inject` attribute, you
+> may simply specify the _classname_ to inject; Disclosure will use the first
+> dependency of that class (or whatever extends/implements it) it finds. Take
+> care to only do this for dependencies you _know_ are unique, or the results
+> may be very unpredictable!
+
+When specifying dependencies using attributes, you may simply call `inject`
+without any arguments. If these strategies are _mixed_, Disclosure will _first_
+inject dependencies specified by attributes, _then_ the injector arguments,
+where the latter may override the former.
+
+## Instantiating using the Disclosure factory
+Also new in version 2.2 is the inclusion of the `Monolyth\Disclosure\Factory`.
+Objects constructed via its `build` method will automatically have their
+dependencies added:
+
+```php
+<?php
+
+use Monolyth\Disclosure\{ Inject, Factory };
+
+class MyObject
+{
+    [#Inject]
+    private Foo $foo;
+
+    public function __construct($someArgument, $anotherArgument)
+    {
+        $this->someArgument = $someArgument;
+        $this->anotherArgument = $anotherArgument;
+    }
+
+    public function doSomething()
+    {
+        return $this->foo->method($this->someArgument, $this->anotherArgument);
+    }
+}
+
+$myobject = Factory::build(MyObject::class, 'someArgument', 'anotherArgument');
+var_dump($myobject->doSomething()); // Whatever Foo::method does...
+```
 
