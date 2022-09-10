@@ -190,3 +190,8 @@ You could, in theory, also make the promoted properties nullable and _then_
 call `inject` from your constructor (or anywhere else, really). But, y'know,
 seriously?
 
+## Calling a parent constructor that _also_ depends on promoted properties?
+For this, Disclosure supplies the `Mother` trait with its method
+`callParentConstructor`. Pass any additional arguments as, ehm, arguments, and
+the trait will fill out the rest and inject where needed.
+
