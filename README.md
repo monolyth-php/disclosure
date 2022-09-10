@@ -15,8 +15,6 @@ composer require monolyth/disclosure
 1. Get or clonse the code;
 2. Register `/path/to/disclosure/src` for the namespace `Monolyth\\Disclosure\\`
    in your PSR-4 autoloader;
-3. Register `/path/to/disclosure/psr` for the namespace `Psr\\Container\\` in
-   your PSR-4 autoloader
 
 ## Usage
 Add your dependencies to a `Container` object somewhere. It often makes sense to
@@ -29,10 +27,7 @@ fine to do it alongside your class definitions.
 use Monolyth\Disclosure\Container;
 
 $container = new Container;
-$container->register(function (&$foo, &$bar) {
-    $foo = new Foo;
-    $bar = new Bar;
-});
+$container->register(fn (&$foo) => $foo = new Foo);
 ```
 
 The container will now assosiate the `foo` key with an object of instance `Foo`.
@@ -71,35 +66,15 @@ var_dump($myInstance->foo instanceof Foo); // true
 string with a depedency name, or a callable with dependency names as arguments.
 Which style you use is up to your own preference.
 
-## _Whoah!_ Why not simply do `$this->foo = new MyDependency;`?
-There's plenty of reasons for using a Container instead of the `new` keyword
-all over the place, but the main ones are:
-
-- Hard-coding instances makes it hard to inject mocks during unit tests (you
-  could use `class_alias` for that, but seriously).
-- It causes tight coupling between classes, which is a Bad Thing(tm).
-- It makes it easier to inject objects as a Service locator (i.e., one instance
-  of an object instead of a new one each time).
-
-No, in the above example it doesn't add much, but see the complete documentation
-for real-world, practical examples of why dependency injection is generally a
-good idea.
-
 ## Injection using attributes
 As of version 2.2, it is also possible to specify dependencies in PHP8
-_attributes_. This is done by specifying the `Monolyth\Disclosure\Inject`
-attribute on the _class_, with the required key as an argument.
-
-> Alternatively, both when calling `inject` or adding an `Inject` attribute, you
-> may simply specify the _classname_ to inject; Disclosure will use the first
-> dependency of that class (or whatever extends/implements it) it finds. Take
-> care to only do this for dependencies you _know_ are unique, or the results
-> may be very unpredictable!
+_attributes_. This is done by specifying the `Monolyth\Disclosure\Depends`
+attribute on the property that should be injected. The property name should,
+of course, match a registered dependency.
 
 When specifying dependencies using attributes, you may simply call `inject`
-without any arguments. If these strategies are _mixed_, Disclosure will _first_
-inject dependencies specified by attributes, _then_ the injector arguments,
-where the latter may override the former.
+without any arguments. You can also mix these strategies; since injected names
+must be unique, it doesn't really matter.
 
 ## Instantiating using the Disclosure factory
 Also new in version 2.2 is the inclusion of the `Monolyth\Disclosure\Factory`.
@@ -109,11 +84,11 @@ dependencies added:
 ```php
 <?php
 
-use Monolyth\Disclosure\{ Inject, Factory };
+use Monolyth\Disclosure\{ Depends, Factory };
 
 class MyObject
 {
-    [#Inject]
+    [#Depends]
     private Foo $foo;
 
     public function __construct($someArgument, $anotherArgument)
@@ -131,4 +106,87 @@ class MyObject
 $myobject = Factory::build(MyObject::class, 'someArgument', 'anotherArgument');
 var_dump($myobject->doSomething()); // Whatever Foo::method does...
 ```
+
+## Injection using promoted constructor properties
+A cool new feature in PHP8 is _promoted constructor properties_. In short,
+instead of writing this:
+
+```php
+<?php
+
+class Foo
+{
+    private $bar;
+
+    public function __construct(Bar $bar)
+    {
+        $this->bar = $bar;
+        // ...other constructor stuff...
+    }
+}
+```
+
+...you are now allowed to write _this_:
+
+```php
+<?php
+
+class Foo
+{
+    public function __construct(private Bar $bar)
+    {
+        // ...other constructor stuff, $this->bar is already set...
+    }
+}
+```
+
+And guess what? These can also be annotated! You guessed it: if you annotate a
+promoted constructor property with `Depends` _and_ construct using the
+`Factory::build` method, you don't even have to worry about them anymore!
+
+```php
+<?php
+
+use Monolyth\Disclosure\{ Inject, Factory };
+
+class Foo
+{
+    public function __construct(
+        #[Depends]
+        private Bar $bar
+    ) {
+    }
+}
+$foo = Factory::build(Foo::class);
+```
+
+Any non-promoted constructor arguments will be passed in-order from the
+additional arguments given to `build`:
+
+```php
+<?php
+
+use Monolyth\Disclosure\{ Inject, Factory };
+
+class Foo
+{
+    public function __construct(
+        #[Depends]
+        private Bar $bar,
+        string $someOtherArgument,
+        #[Depends]
+        public DateTime $dateTime,
+        int $aNumber
+    );
+}
+$foo = Factory::build(Foo::class, 'Hello world!', 42);
+```
+
+Note that when using promoted arguments for injection, it is _no longer_
+necessary to "use" the `Injector` trait if you don't otherwise use this
+strategy.
+
+You could, in theory, also make the promoted properties nullable and _then_
+call `inject` from your constructor (or anywhere else, really). But, y'know,
+seriously?
 
