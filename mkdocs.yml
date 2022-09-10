@@ -3,11 +3,6 @@ site_url: http://disclosure.monomelodies.nl/docs/
 repo_url: https://github.com/monomelodies/disclosure
 
 nav:
-- Introduction:
-    - 'Quickstart': 'index.md'
-- Basic usage:
-    - 'The Container object': 'container.md'
-    - 'The Injector trait': 'injector.md'
-- Advanced topics:
-    - 'Injecting constructor dependencies': 'constructor.md'
+- Disclosure:
+    - 'Documentation': 'index.md'
 
