@@ -47,7 +47,9 @@ trait Injector
             }
         }
         foreach (array_unique($requested) as $dependency) {
-            $this->$dependency = $container->get($dependency);
+            if (!isset($this->$dependency)) {
+                $this->$dependency = $container->get($dependency);
+            }
         }
     }
 }
