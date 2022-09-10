@@ -43,17 +43,8 @@ return function () : Generator {
 
     /** $foo->bar is the same class and instance as $foo2->bar */
     yield function () use ($foo) {
-        $foo2 = Demo\Basic::resolve();
+        $foo2 = new Demo\Basic;
         assert($foo->bar === $foo2->bar);
-    };
-
-    /** resolve should instantiate a constructor-injected class, so that $foo->foo, $foo->fuzz and $foo->fizz and $foo->fizz->bar are all of the correct class. */
-    yield function () {
-        $foo = Demo\Resolve::resolve();
-        assert($foo->foo instanceof Demo\BasicInjection1);
-        assert($foo->fuzz instanceof Demo\BasicInjection2);
-        assert($foo->fizz instanceof Demo\DeepInjection);
-        assert($foo->fizz->bar instanceof Demo\BasicInjection2);
     };
 };
 
