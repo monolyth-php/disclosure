@@ -2,8 +2,10 @@
 
 namespace Monolyth\Disclosure;
 
+use ReflectionObject;
 use ReflectionFunction;
 use ReflectionClass;
+use ReflectionProperty;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
@@ -26,6 +28,14 @@ trait Injector
     {
         $container = new Container;
         $requested = [];
+        $reflection = new ReflectionObject($this);
+        $properties = $reflection->getProperties(~ReflectionProperty::IS_STATIC);
+        foreach ($properties as $property) {
+            $attributes = $property->getAttributes(Depends::class);
+            if ($attributes) {
+                $requested[] = $property->getName();
+            }
+        }
         foreach ($injects as $inject) {
             if (is_string($inject)) {
                 $requested[] = $inject;
@@ -36,64 +46,9 @@ trait Injector
                 }
             }
         }
-        foreach ($requested as $dependency) {
+        foreach (array_unique($requested) as $dependency) {
             $this->$dependency = $container->get($dependency);
         }
-    }
-
-    /**
-     * For classes that expect dependencies in their constructor, you can use
-     * this method instead of "new" with lots of Container::get calls.
-     *
-     * Type-hinted arguments _must_ match a dependency. If no dependency exists,
-     * a new instance will be passed.
-     *
-     * @return object An object of the same class as called on, with dependencies
-     *  injected through its constructor.
-     * @throws Disclosure\TypeMismatchException if the retrieved dependency does
-     *  not satisfy the argument's type hint.
-     * @throws Psr\Container\NotFoundExceptionInterface if _any_ of the
-     *  requested dependencies could not be resolved.
-     * @see Monolyth\Disclosure\Container::get
-     */
-    public static function resolve() : object
-    {
-        $reflection = new ReflectionClass(__CLASS__);
-        $constructor = $reflection->getConstructor();
-        $args = [];
-        $container = new Container;
-        foreach ($constructor->getParameters() as $parameter) {
-            $name = $parameter->name;
-            $e = $inject = $class = null;
-            try {
-                $inject = $container->get($name);
-            } catch (NotFoundExceptionInterface $e) {
-            }
-            if ($type = $parameter->getType()) {
-                $instance = $type->__toString();
-                $class = new ReflectionClass($instance);
-                if (isset($inject)) {
-                    if ($inject instanceof $instance) {
-                        $args[] = $inject;
-                        continue;
-                    } else {
-                        throw new TypeMismatchException(get_class($inject));
-                    }
-                }
-                if ($class->implementsInterface(Injectable::class)) {
-                    $args[] = $class::resolve();
-                } else {
-                    $args[] = $class->newInstance();
-                }
-            } elseif ($parameter->isDefaultValueAvailable()) {
-                $args[] = $parameter->getDefaultValue();
-            } elseif (isset($e)) {
-                throw $e;
-            } elseif (isset($inject)) {
-                $args[] = $inject;
-            }
-        }
-        return $reflection->newInstanceArgs($args);
     }
 }
 
