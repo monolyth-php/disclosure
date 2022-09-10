@@ -8,8 +8,18 @@ abstract class Factory
 {
     public static function build(string $object, ...$arguments) : object
     {
-        $container = new Container;
         $reflection = new ReflectionClass($object);
+        $arguments = self::getArgumentsForClassConstructor($reflection, $arguments);
+        $object = $reflection->newInstance(...$arguments);
+        if (in_array(Injector::class, $reflection->getTraitNames())) {
+            $object->inject();
+        }
+        return $object;
+    }
+
+    public static function getArgumentsForClassConstructor(ReflectionClass $reflection, array $arguments)
+    {
+        static $container = new Container;
         $constructor = $reflection->getMethod('__construct');
         $parameters = $constructor->getParameters();
         $args = [];
@@ -23,11 +33,7 @@ abstract class Factory
             }
             $args[] = array_shift($arguments);
         }
-        $object = $reflection->newInstance(...$args);
-        if (in_array(Injector::class, $reflection->getTraitNames())) {
-            $object->inject();
-        }
-        return $object;
+        return $args;
     }
 }
 
