@@ -12,7 +12,7 @@ composer require monolyth/disclosure
 ```
 
 ### Manual installation
-1. Get or clonse the code;
+1. Get or clone the code;
 2. Register `/path/to/disclosure/src` for the namespace `Monolyth\\Disclosure\\`
    in your PSR-4 autoloader;
 
@@ -62,7 +62,7 @@ var_dump($myInstance->foo instanceof Foo); // true
 
 ```
 
-`inject` accepts a random number of arguments, where each argument is their a
+`inject` accepts a random number of arguments, where each argument is either a
 string with a depedency name, or a callable with dependency names as arguments.
 Which style you use is up to your own preference.
 
@@ -193,5 +193,45 @@ seriously?
 ## Calling a parent constructor that _also_ depends on promoted properties?
 For this, Disclosure supplies the `Mother` trait with its method
 `callParentConstructor`. Pass any additional arguments as, ehm, arguments, and
-the trait will fill out the rest and inject where needed.
+the trait will fill out the rest and inject where needed:
+
+```php
+<?php
+
+use Monolyth\Disclosure\{ Factory, Mother, Depends };
+
+class Foo
+{
+    public function __construct(
+        #[Depends]
+        protected SomeDependency $something,
+        public int $someArgument
+    ) {}
+}
+
+class Bar extends Foo
+{
+    use Mother;
+
+    public function __construct(protected string $anotherArgument)
+    {
+        $this->callParentConstructor(42);
+        echo get_class($this->something); // SomeDependency
+        echo $this->someArgument; // 42
+        echo $this->anotherArgument; // hello world
+    }
+}
+
+$bar = Factory::build(Foo::class, 'hello world');
+```
+
+Of course, the `Mother` trait may be used regardless of whether the parent class
+was instantiated using `Factory::build` or uses the `Injector`. So this is also
+fine:
+
+```php
+<?php
+
+$bar = new Bar('hello world');
+```
 
