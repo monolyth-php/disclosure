@@ -67,7 +67,7 @@ string with a depedency name, or a callable with dependency names as arguments.
 Which style you use is up to your own preference.
 
 ## Injection using attributes
-As of version 2.2, it is also possible to specify dependencies in PHP8
+As of version 3.0, it is also possible to specify dependencies in PHP8
 _attributes_. This is done by specifying the `Monolyth\Disclosure\Depends`
 attribute on the property that should be injected. The property name should,
 of course, match a registered dependency.
@@ -77,7 +77,7 @@ without any arguments. You can also mix these strategies; since injected names
 must be unique, it doesn't really matter.
 
 ## Instantiating using the Disclosure factory
-Also new in version 2.2 is the inclusion of the `Monolyth\Disclosure\Factory`.
+Also new in version 3.0 is the inclusion of the `Monolyth\Disclosure\Factory`.
 Objects constructed via its `build` method will automatically have their
 dependencies added:
 
