@@ -31,6 +31,11 @@ abstract class Factory
                     continue;
                 }
             }
+            if (!$arguments) {
+                // Not given, so probably using a default... or someone is
+                // screwing up, in which case we let everything fail :-)
+                continue;
+            }
             $args[] = array_shift($arguments);
         }
         return $args;
