@@ -3,6 +3,7 @@
 namespace Monolyth\Disclosure;
 
 use ReflectionClass;
+use ReflectionException;
 
 abstract class Factory
 {
@@ -20,7 +21,11 @@ abstract class Factory
     public static function getArgumentsForClassConstructor(ReflectionClass $reflection, array $arguments)
     {
         static $container = new Container;
-        $constructor = $reflection->getMethod('__construct');
+        try {
+            $constructor = $reflection->getMethod('__construct');
+        } catch (ReflectionException $e) {
+            return [];
+        }
         $parameters = $constructor->getParameters();
         $args = [];
         foreach ($parameters as $parameter) {
