@@ -1,5 +1,4 @@
 {
     "src": "src",
-    "tests": "tests",
-    "namespace": "Disclosure\\Test"
+    "test": "vendor/bin/toast"
 }
