@@ -15,7 +15,7 @@
         "psr/container": "^1.0"
     },
     "require-dev": {
-        "gentry/gentry": "^0.13.3"
+        "gentry/gentry": "^0.16.0"
     },
     "autoload": {
         "psr-4": {
