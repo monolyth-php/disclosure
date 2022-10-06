@@ -13,8 +13,9 @@ use ReflectionFunction;
  */
 class Container implements ContainerInterface
 {
-    private static $map = [];
-    private $delegate;
+    private static array $map = [];
+
+    private ?ContainerInterface $delegate;
 
     /**
      * Constructor. Optionally pass a delegate container to use. Note that
@@ -23,6 +24,7 @@ class Container implements ContainerInterface
      *
      * @param Psr\Container\ContainerInterface $delegate Optional delegate
      *  container to use.
+     * @return void
      */
     public function __construct(ContainerInterface $delegate = null)
     {
@@ -37,9 +39,10 @@ class Container implements ContainerInterface
      *
      * @param string $key The unique identifier for the dependency.
      * @return mixed Whatever was stored under $key.
-     * @throws Disclosure\NotFoundException if no such $key was registered.
+     * @throws Monolyth\Disclosure\NotFoundException if no such $key was
+     *  registered.
      */
-    public function get($key)
+    public function get($key) : mixed
     {
         if (!array_key_exists($key, static::$map)) {
             throw new NotFoundException($key);
@@ -76,11 +79,15 @@ class Container implements ContainerInterface
      * argument should be assigned its designated value when invoked. Note that
      * invocation takes place only when a dependency is retrieved.
      *
-     * @param callable $inject A callable associating values with keys.
+     * @param callable|array $inject A callable or array associating values with keys.
      * @return void
      */
-    public function register(callable $inject) : void
+    public function register(callable|array $inject) : void
     {
+        if (is_array($inject)) {
+            self::$map += $inject;
+            return;
+        }
         $reflection = new ReflectionFunction($inject);
         $parameters = $reflection->getParameters();
         foreach ($parameters as $parameter) {
