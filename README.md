@@ -33,6 +33,9 @@ $container->register(fn (&$foo) => $foo = new Foo);
 The container will now assosiate the `foo` key with an object of instance `Foo`.
 The naming of the key is irrelevant; just remember that they must be unique.
 
+You may also supply an array of key/value pairs to the register method; this is
+useful for objects you're always going to need, e.g. an environment object.
+
 Tell your classes what they should depend on using the `inject` method supplied
 by the `Injector` trait:
 
@@ -234,4 +237,25 @@ fine:
 
 $bar = new Bar('hello world');
 ```
+
+## Resolving circular dependencies
+Sometimes you will run into the sticky situation where dependencies become
+_circular_. So, class A depends on an object of class B, and class B depends on
+one of class A. This will cause an infinite loop and, depending on what you're
+using, a fatal error, segmentation fault or just a very unhelpful blank screen.
+
+We are working on a tool that attempts to identify these issues (as long as you
+use attributes), but even that won't be able to identify _all_ cases, e.g. when
+one uses `$container->get(...)` in the callable that instantiates a dependency.
+
+Until we think of a better solution, you'll have to identify the culprit
+manually. For complicated projects, this will likely involve `var_dump`ing
+various things in `Factory::build` and `Container::get`.
+
+Once you've found the culprit, and assuming you cannot resolve the circular
+dependency logically (i.e., A really needs B somewhere and vice versa), your
+best bet is to fall back to the `Injector` and `inject` either or both of the
+offending dependencies JIT where they are used. This will allow the objects in
+question to get fully instantiated, and after that the problem should usually go
+away.
 
