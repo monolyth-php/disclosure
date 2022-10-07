@@ -44,11 +44,14 @@ class Container implements ContainerInterface
      */
     public function get($key) : mixed
     {
+        static $stack = new Stack;
         if (!array_key_exists($key, static::$map)) {
             throw new NotFoundException($key);
         }
         if (static::$map[$key] instanceof ReflectionFunction) {
+            $stack->push($key);
             static::$map[$key] = static::$map[$key]->invoke($this);
+            $stack->clear();
         }
         return static::$map[$key];
     }
