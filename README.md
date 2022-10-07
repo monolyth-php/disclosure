@@ -244,18 +244,18 @@ _circular_. So, class A depends on an object of class B, and class B depends on
 one of class A. This will cause an infinite loop and, depending on what you're
 using, a fatal error, segmentation fault or just a very unhelpful blank screen.
 
+Disclosure throws a `Monolyth\Disclosure\CircularDependencyException` when it
+detects such a situation, with a message detailing the full stack that led up to
+the circular dependency. You must use this message to fix your circular logic.
+This exception extends PHP's built in `LogicException`.
 We are working on a tool that attempts to identify these issues (as long as you
-use attributes), but even that won't be able to identify _all_ cases, e.g. when
-one uses `$container->get(...)` in the callable that instantiates a dependency.
 
-Until we think of a better solution, you'll have to identify the culprit
-manually. For complicated projects, this will likely involve `var_dump`ing
-various things in `Factory::build` and `Container::get`.
+Assuming you cannot resolve the circular dependency logically (i.e., A really
+needs B somewhere and vice versa), your best bet is to fall back to the
+`Injector` and `inject` either or both of the offending dependencies JIT where
+they are used. This will allow the objects in question to get fully
+instantiated, and after that the problem should usually go away.
 
-Once you've found the culprit, and assuming you cannot resolve the circular
-dependency logically (i.e., A really needs B somewhere and vice versa), your
-best bet is to fall back to the `Injector` and `inject` either or both of the
-offending dependencies JIT where they are used. This will allow the objects in
-question to get fully instantiated, and after that the problem should usually go
-away.
+The alternative is to not inject the offending object as a dependency, but
+rather pass or set it manually.
 
