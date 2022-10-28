@@ -7,11 +7,8 @@ use ReflectionException;
 
 trait Mother
 {
-    public function callParentConstructor(?string $parentClass = null, mixed ...$arguments) : void
+    public function callParentConstructor(string $parentClass, mixed ...$arguments) : void
     {
-        if (is_null($parentClass)) {
-            $parentClass = parent::class;
-        }
         $reflection = new ReflectionClass($parentClass);
         try {
             $constructor = $reflection->getMethod('__construct');
