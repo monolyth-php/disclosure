@@ -3,6 +3,7 @@
 namespace Monolyth\Disclosure;
 
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionException;
 
 abstract class Factory
@@ -10,7 +11,10 @@ abstract class Factory
     public static function build(string $object, ...$arguments) : object
     {
         $reflection = new ReflectionClass($object);
-        $arguments = self::getArgumentsForClassConstructor($reflection, $arguments);
+        try {
+            $arguments = self::getArgumentsForClassConstructor($reflection->getMethod('__construct'), $arguments);
+        } catch (ReflectionException $e) {
+        }
         $object = $reflection->newInstance(...$arguments);
         if (in_array(Injector::class, $reflection->getTraitNames())) {
             $object->inject();
@@ -18,14 +22,9 @@ abstract class Factory
         return $object;
     }
 
-    public static function getArgumentsForClassConstructor(ReflectionClass $reflection, array $arguments)
+    public static function getArgumentsForClassConstructor(ReflectionMethod $constructor, array $arguments)
     {
         static $container = new Container;
-        try {
-            $constructor = $reflection->getMethod('__construct');
-        } catch (ReflectionException $e) {
-            return [];
-        }
         $parameters = $constructor->getParameters();
         $args = [];
         foreach ($parameters as $parameter) {
