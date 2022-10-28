@@ -195,8 +195,9 @@ seriously?
 
 ## Calling a parent constructor that _also_ depends on promoted properties?
 For this, Disclosure supplies the `Mother` trait with its method
-`callParentConstructor`. Pass any additional arguments as, ehm, arguments, and
-the trait will fill out the rest and inject where needed:
+`callParentConstructor`. The first argument is the actual parent class, for
+which you will normally use `parent::class`. Pass any additional arguments as,
+ehm, arguments, and the trait will fill out the rest and inject where needed:
 
 ```php
 <?php
@@ -218,7 +219,7 @@ class Bar extends Foo
 
     public function __construct(protected string $anotherArgument)
     {
-        $this->callParentConstructor(42);
+        $this->callParentConstructor(parent::class, 42);
         echo get_class($this->something); // SomeDependency
         echo $this->someArgument; // 42
         echo $this->anotherArgument; // hello world
@@ -229,8 +230,8 @@ $bar = Factory::build(Foo::class, 'hello world');
 ```
 
 Of course, the `Mother` trait may be used regardless of whether the parent class
-was instantiated using `Factory::build` or uses the `Injector`. So this is also
-fine:
+was instantiated using `Factory::build` or uses the `Injector` (or neither). So
+this is also fine:
 
 ```php
 <?php
