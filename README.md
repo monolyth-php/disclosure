@@ -195,8 +195,7 @@ seriously?
 
 ## Calling a parent constructor that _also_ depends on promoted properties?
 For this, Disclosure supplies the `Mother` trait with its method
-`callParentConstructor`. The first argument is the actual parent class, for
-which you will normally use `parent::class`. Pass any additional arguments as,
+`callParentConstructor`. Pass any additional (non-injected) arguments as,
 ehm, arguments, and the trait will fill out the rest and inject where needed:
 
 ```php
@@ -219,7 +218,7 @@ class Bar extends Foo
 
     public function __construct(protected string $anotherArgument)
     {
-        $this->callParentConstructor(parent::class, 42);
+        $this->callParentConstructor(42);
         echo get_class($this->something); // SomeDependency
         echo $this->someArgument; // 42
         echo $this->anotherArgument; // hello world
