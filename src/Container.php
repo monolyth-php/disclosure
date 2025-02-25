@@ -26,7 +26,7 @@ class Container implements ContainerInterface
      *  container to use.
      * @return void
      */
-    public function __construct(ContainerInterface $delegate = null)
+    public function __construct(?ContainerInterface $delegate = null)
     {
         if (isset($delegate)) {
             $this->delegate = $delegate;
